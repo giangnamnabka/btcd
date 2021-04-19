@@ -14,7 +14,7 @@ import (
 	"github.com/giangnamnabka/btcd/chaincfg"
 	"github.com/giangnamnabka/btcd/database"
 	"github.com/giangnamnabka/btcd/database/ffldb"
-	"github.com/giangnamnabka/btcutil"
+	"github.com/btcsuite/btcutil"
 )
 
 // dbType is the database type name for this driver.

@@ -20,7 +20,7 @@ import (
 	"github.com/giangnamnabka/btcd/mining"
 	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
-	"github.com/giangnamnabka/btcutil"
+	"github.com/btcsuite/btcutil"
 )
 
 const (

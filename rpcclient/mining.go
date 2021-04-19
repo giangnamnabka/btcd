@@ -11,7 +11,7 @@ import (
 
 	"github.com/giangnamnabka/btcd/btcjson"
 	"github.com/giangnamnabka/btcd/chaincfg/chainhash"
-	"github.com/giangnamnabka/btcutil"
+	"github.com/btcsuite/btcutil"
 )
 
 // FutureGenerateResult is a future promise to deliver the result of a

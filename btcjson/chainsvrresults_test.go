@@ -12,7 +12,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/giangnamnabka/btcd/btcjson"
 	"github.com/giangnamnabka/btcd/chaincfg/chainhash"
-	"github.com/giangnamnabka/btcutil"
+	"github.com/btcsuite/btcutil"
 )
 
 // TestChainSvrCustomResults ensures any results that have custom marshalling

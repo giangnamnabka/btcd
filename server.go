@@ -36,8 +36,8 @@ import (
 	"github.com/giangnamnabka/btcd/peer"
 	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
-	"github.com/giangnamnabka/btcutil"
-	"github.com/giangnamnabka/btcutil/bloom"
+	"github.com/btcsuite/btcutil"
+	"github.com/btcsuite/btcutil/bloom"
 )
 
 const (

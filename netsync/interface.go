@@ -11,7 +11,7 @@ import (
 	"github.com/giangnamnabka/btcd/mempool"
 	"github.com/giangnamnabka/btcd/peer"
 	"github.com/giangnamnabka/btcd/wire"
-	"github.com/giangnamnabka/btcutil"
+	"github.com/btcsuite/btcutil"
 )
 
 // PeerNotifier exposes methods to notify peers of status changes to

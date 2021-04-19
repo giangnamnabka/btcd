@@ -12,7 +12,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/giangnamnabka/btcd/rpcclient"
-	"github.com/giangnamnabka/btcutil"
+	"github.com/btcsuite/btcutil"
 )
 
 func main() {
