@@ -409,23 +409,11 @@ func payToPubKeyHashScript(pubKeyHash []byte) ([]byte, error) {
 		Script()
 }
 
-// payToWitnessPubKeyHashScript creates a new script to pay to a version 0
-// pubkey hash witness program. The passed hash is expected to be valid.
-func payToWitnessPubKeyHashScript(pubKeyHash []byte) ([]byte, error) {
-	return NewScriptBuilder().AddOp(OP_0).AddData(pubKeyHash).Script()
-}
-
 // payToScriptHashScript creates a new script to pay a transaction output to a
 // script hash. It is expected that the input is a valid hash.
 func payToScriptHashScript(scriptHash []byte) ([]byte, error) {
 	return NewScriptBuilder().AddOp(OP_HASH160).AddData(scriptHash).
 		AddOp(OP_EQUAL).Script()
-}
-
-// payToWitnessPubKeyHashScript creates a new script to pay to a version 0
-// script hash witness program. The passed hash is expected to be valid.
-func payToWitnessScriptHashScript(scriptHash []byte) ([]byte, error) {
-	return NewScriptBuilder().AddOp(OP_0).AddData(scriptHash).Script()
 }
 
 // payToPubkeyScript creates a new script to pay a transaction output to a
@@ -461,20 +449,6 @@ func PayToAddrScript(addr btcutil.Address) ([]byte, error) {
 				nilAddrErrStr)
 		}
 		return payToPubKeyScript(addr.ScriptAddress())
-
-	case *btcutil.AddressWitnessPubKeyHash:
-		if addr == nil {
-			return nil, scriptError(ErrUnsupportedAddress,
-				nilAddrErrStr)
-		}
-		return payToWitnessPubKeyHashScript(addr.ScriptAddress())
-	case *btcutil.AddressWitnessScriptHash:
-		if addr == nil {
-			return nil, scriptError(ErrUnsupportedAddress,
-				nilAddrErrStr)
-		}
-		return payToWitnessScriptHashScript(addr.ScriptAddress())
-	}
 
 	str := fmt.Sprintf("unable to generate payment script for unsupported "+
 		"address type %T", addr)
