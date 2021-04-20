@@ -449,7 +449,8 @@ func PayToAddrScript(addr btcutil.Address) ([]byte, error) {
 				nilAddrErrStr)
 		}
 		return payToPubKeyScript(addr.ScriptAddress())
-
+	}
+	
 	str := fmt.Sprintf("unable to generate payment script for unsupported "+
 		"address type %T", addr)
 	return nil, scriptError(ErrUnsupportedAddress, str)
