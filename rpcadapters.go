@@ -13,7 +13,7 @@ import (
 	"github.com/giangnamnabka/btcd/netsync"
 	"github.com/giangnamnabka/btcd/peer"
 	"github.com/giangnamnabka/btcd/wire"
-	"github.com/btcsuite/btcutil"
+	"github.com/giangnamnabka/btcutil"
 )
 
 // rpcPeer provides a peer for use with the RPC server and implements the

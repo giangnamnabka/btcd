@@ -7,7 +7,7 @@ import (
 
 	"github.com/giangnamnabka/btcd/btcec"
 	"github.com/giangnamnabka/btcd/chaincfg"
-	"github.com/btcsuite/btcutil"
+	"github.com/giangnamnabka/btcutil"
 	"golang.org/x/crypto/ripemd160"
 )
 

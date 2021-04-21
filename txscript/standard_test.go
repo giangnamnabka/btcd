@@ -13,7 +13,7 @@ import (
 
 	"github.com/giangnamnabka/btcd/chaincfg"
 	"github.com/giangnamnabka/btcd/wire"
-	"github.com/btcsuite/btcutil"
+	"github.com/giangnamnabka/btcutil"
 )
 
 // mustParseShortForm parses the passed short form script and returns the

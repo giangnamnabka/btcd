@@ -41,7 +41,7 @@ import (
 	"github.com/giangnamnabka/btcd/peer"
 	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
-	"github.com/btcsuite/btcutil"
+	"github.com/giangnamnabka/btcutil"
 )
 
 // API version constants
