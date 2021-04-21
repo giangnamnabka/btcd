@@ -13,6 +13,8 @@ require (
 	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
 )
 
-replace github.com/btcsuite/btcutil => github.com/giangnamnabka/btcutil v1.0.3-0.20210420155121-8b03ebc257c8
+// replace github.com/btcsuite/btcutil => github.com/giangnamnabka/btcutil v1.0.3-0.20210420155121-8b03ebc257c8
+
+replace github.com/btcsuite/btcutil@v1.0.2 => github.com/giangnamnabka/btcutil v1.0.3-0.20210421041131-fe9072653891
 
 go 1.14
