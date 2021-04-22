@@ -49,7 +49,7 @@ func TestMsgAlert(t *testing.T) {
 
 	// Test BtcEncode with Payload == nil
 	var buf bytes.Buffer
-	err := msg.BtcEncode(&buf, pver, encoding)
+	err := msg.BtcEncode(&buf, pver)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -66,7 +66,7 @@ func TestMsgAlert(t *testing.T) {
 	// note: Payload is an empty Alert but not nil
 	msg.Payload = new(Alert)
 	buf = *new(bytes.Buffer)
-	err = msg.BtcEncode(&buf, pver, encoding)
+	err = msg.BtcEncode(&buf, pver)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -151,7 +151,7 @@ func TestMsgAlertWire(t *testing.T) {
 	for i, test := range tests {
 		// Encode the message to wire format.
 		var buf bytes.Buffer
-		err := test.in.BtcEncode(&buf, test.pver, test.enc)
+		err := test.in.BtcEncode(&buf, test.pver)
 		if err != nil {
 			t.Errorf("BtcEncode #%d error %v", i, err)
 			continue
@@ -165,7 +165,7 @@ func TestMsgAlertWire(t *testing.T) {
 		// Decode the message from wire format.
 		var msg MsgAlert
 		rbuf := bytes.NewReader(test.buf)
-		err = msg.BtcDecode(rbuf, test.pver, test.enc)
+		err = msg.BtcDecode(rbuf, test.pver)
 		if err != nil {
 			t.Errorf("BtcDecode #%d error %v", i, err)
 			continue
@@ -216,7 +216,7 @@ func TestMsgAlertWireErrors(t *testing.T) {
 	for i, test := range tests {
 		// Encode to wire format.
 		w := newFixedWriter(test.max)
-		err := test.in.BtcEncode(w, test.pver, test.enc)
+		err := test.in.BtcEncode(w, test.pver)
 		if reflect.TypeOf(err) != reflect.TypeOf(test.writeErr) {
 			t.Errorf("BtcEncode #%d wrong error got: %v, want: %v",
 				i, err, test.writeErr)
@@ -236,7 +236,7 @@ func TestMsgAlertWireErrors(t *testing.T) {
 		// Decode from wire format.
 		var msg MsgAlert
 		r := newFixedReader(test.max, test.buf)
-		err = msg.BtcDecode(r, test.pver, test.enc)
+		err = msg.BtcDecode(r, test.pver)
 		if reflect.TypeOf(err) != reflect.TypeOf(test.readErr) {
 			t.Errorf("BtcDecode #%d wrong error got: %v, want: %v",
 				i, err, test.readErr)
@@ -257,7 +257,7 @@ func TestMsgAlertWireErrors(t *testing.T) {
 	// Test Error on empty Payload
 	baseMsgAlert.SerializedPayload = []byte{}
 	w := new(bytes.Buffer)
-	err := baseMsgAlert.BtcEncode(w, pver, encoding)
+	err := baseMsgAlert.BtcEncode(w, pver)
 	if _, ok := err.(*MessageError); !ok {
 		t.Errorf("MsgAlert.BtcEncode wrong error got: %T, want: %T",
 			err, MessageError{})
@@ -268,7 +268,7 @@ func TestMsgAlertWireErrors(t *testing.T) {
 	baseMsgAlert.Payload = new(Alert)
 	baseMsgAlert.Payload.SetCancel = make([]int32, maxCountSetCancel+1)
 	buf := *new(bytes.Buffer)
-	err = baseMsgAlert.BtcEncode(&buf, pver, encoding)
+	err = baseMsgAlert.BtcEncode(&buf, pver)
 	if _, ok := err.(*MessageError); !ok {
 		t.Errorf("MsgAlert.BtcEncode wrong error got: %T, want: %T",
 			err, MessageError{})
@@ -278,7 +278,7 @@ func TestMsgAlertWireErrors(t *testing.T) {
 	baseMsgAlert.Payload = new(Alert)
 	baseMsgAlert.Payload.SetSubVer = make([]string, maxCountSetSubVer+1)
 	buf = *new(bytes.Buffer)
-	err = baseMsgAlert.BtcEncode(&buf, pver, encoding)
+	err = baseMsgAlert.BtcEncode(&buf, pver)
 	if _, ok := err.(*MessageError); !ok {
 		t.Errorf("MsgAlert.BtcEncode wrong error got: %T, want: %T",
 			err, MessageError{})

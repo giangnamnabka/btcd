@@ -5,9 +5,6 @@
 package blockchain
 
 import (
-	"fmt"
-
-	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
 	"github.com/giangnamnabka/btcutil"
 )
@@ -52,7 +49,7 @@ const (
 func GetBlockWeight(blk *btcutil.Block) int64 {
 	msgBlock := blk.MsgBlock()
 
-	baseSize := msgBlock.SerializeSizeStripped()
+	baseSize := msgBlock.SerializeSize()
 	totalSize := msgBlock.SerializeSize()
 
 	// (baseSize * 3) + totalSize
@@ -67,7 +64,7 @@ func GetBlockWeight(blk *btcutil.Block) int64 {
 func GetTransactionWeight(tx *btcutil.Tx) int64 {
 	msgTx := tx.MsgTx()
 
-	baseSize := msgTx.SerializeSizeStripped()
+	baseSize := msgTx.SerializeSize()
 	totalSize := msgTx.SerializeSize()
 
 	// (baseSize * 3) + totalSize
@@ -88,29 +85,6 @@ func GetSigOpCost(tx *btcutil.Tx, isCoinBaseTx bool, utxoView *UtxoViewpoint, bi
 			return 0, nil
 		}
 		numSigOps += (numP2SHSigOps * WitnessScaleFactor)
-	}
-
-	if segWit && !isCoinBaseTx {
-		msgTx := tx.MsgTx()
-		for txInIndex, txIn := range msgTx.TxIn {
-			// Ensure the referenced output is available and hasn't
-			// already been spent.
-			utxo := utxoView.LookupEntry(txIn.PreviousOutPoint)
-			if utxo == nil || utxo.IsSpent() {
-				str := fmt.Sprintf("output %v referenced from "+
-					"transaction %s:%d either does not "+
-					"exist or has already been spent",
-					txIn.PreviousOutPoint, tx.Hash(),
-					txInIndex)
-				return 0, ruleError(ErrMissingTxOut, str)
-			}
-
-			witness := txIn.Witness
-			sigScript := txIn.SignatureScript
-			pkScript := utxo.PkScript()
-			numSigOps += txscript.GetWitnessSigOpCount(sigScript, pkScript, witness)
-		}
-
 	}
 
 	return numSigOps, nil
