@@ -227,14 +227,14 @@ var MainNetParams = Params{
 	ScriptHashAddrID: 0x0d,
 }
 
-// // RegressionNetParams defines the network parameters for the regression test
-// // Bitcoin network.  Not to be confused with the test Bitcoin network (version
-// // 3), this network is sometimes simply called "testnet".
-// var RegressionNetParams = Params{
-// 	// // Address encoding magics
-// 	PubKeyHashAddrID: 0x6f, // starts with m or n
-// 	ScriptHashAddrID: 0xc4, // starts with 2
-// }
+// RegressionNetParams defines the network parameters for the regression test
+// Bitcoin network.  Not to be confused with the test Bitcoin network (version
+// 3), this network is sometimes simply called "testnet".
+var RegressionNetParams = Params{
+	// // Address encoding magics
+	PubKeyHashAddrID: 0x8b, // Testnet colx addresses start with 'x' or 'y'
+	ScriptHashAddrID: 0x13, // Testnet colx script addresses start with '8' or '9'
+}
 
 // TestNet4Params defines the network parameters for the test Bitcoin network
 // (version 3).  Not to be confused with the regression test network, this
@@ -245,18 +245,18 @@ var TestNet4Params = Params{
 	ScriptHashAddrID: 0x13, // Testnet colx script addresses start with '8' or '9'
 }
 
-// // SimNetParams defines the network parameters for the simulation test Bitcoin
-// // network.  This network is similar to the normal test network except it is
-// // intended for private use within a group of individuals doing simulation
-// // testing.  The functionality is intended to differ in that the only nodes
-// // which are specifically specified are used to create the network rather than
-// // following normal discovery rules.  This is important as otherwise it would
-// // just turn into another public testnet.
-// var SimNetParams = Params{
-// 	// // Address encoding magics
-// 	PubKeyHashAddrID: 0x3f, // starts with S
-// 	ScriptHashAddrID: 0x7b, // starts with s
-// }
+// SimNetParams defines the network parameters for the simulation test Bitcoin
+// network.  This network is similar to the normal test network except it is
+// intended for private use within a group of individuals doing simulation
+// testing.  The functionality is intended to differ in that the only nodes
+// which are specifically specified are used to create the network rather than
+// following normal discovery rules.  This is important as otherwise it would
+// just turn into another public testnet.
+var SimNetParams = Params{
+	// // Address encoding magics
+	PubKeyHashAddrID: 0x8b, // Testnet colx addresses start with 'x' or 'y'
+	ScriptHashAddrID: 0x13, // Testnet colx script addresses start with '8' or '9'
+}
 
 var (
 	// ErrDuplicateNet describes an error where the parameters for a Bitcoin

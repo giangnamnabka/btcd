@@ -665,7 +665,7 @@ func createVinList(mtx *wire.MsgTx) []btcjson.Vin {
 		txIn := mtx.TxIn[0]
 		vinList[0].Coinbase = hex.EncodeToString(txIn.SignatureScript)
 		vinList[0].Sequence = txIn.Sequence
-		vinList[0].Witness = witnessToHex(txIn.Witness)
+		// vinList[0].Witness = witnessToHex(txIn.Witness)
 		return vinList
 	}
 
@@ -684,9 +684,9 @@ func createVinList(mtx *wire.MsgTx) []btcjson.Vin {
 			Hex: hex.EncodeToString(txIn.SignatureScript),
 		}
 
-		if mtx.HasWitness() {
-			vinEntry.Witness = witnessToHex(txIn.Witness)
-		}
+		// if mtx.HasWitness() {
+		// 	vinEntry.Witness = witnessToHex(txIn.Witness)
+		// }
 	}
 
 	return vinList
@@ -756,9 +756,9 @@ func createTxRawResult(chainParams *chaincfg.Params, mtx *wire.MsgTx,
 	}
 
 	txReply := &btcjson.TxRawResult{
-		Hex:      mtxHex,
-		Txid:     txHash,
-		Hash:     mtx.WitnessHash().String(),
+		Hex:  mtxHex,
+		Txid: txHash,
+		// Hash:     mtx.WitnessHash().String(),
 		Size:     int32(mtx.SerializeSize()),
 		Vsize:    int32(mempool.GetTxVirtualSize(btcutil.NewTx(mtx))),
 		Weight:   int32(blockchain.GetTransactionWeight(btcutil.NewTx(mtx))),
@@ -1133,11 +1133,11 @@ func handleGetBlock(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
 		Confirmations: int64(1 + best.Height - blockHeight),
 		Height:        int64(blockHeight),
 		Size:          int32(len(blkBytes)),
-		StrippedSize:  int32(blk.MsgBlock().SerializeSizeStripped()),
-		Weight:        int32(blockchain.GetBlockWeight(blk)),
-		Bits:          strconv.FormatInt(int64(blockHeader.Bits), 16),
-		Difficulty:    getDifficultyRatio(blockHeader.Bits, params),
-		NextHash:      nextHashString,
+		// StrippedSize:  int32(blk.MsgBlock().SerializeSizeStripped()),
+		Weight:     int32(blockchain.GetBlockWeight(blk)),
+		Bits:       strconv.FormatInt(int64(blockHeader.Bits), 16),
+		Difficulty: getDifficultyRatio(blockHeader.Bits, params),
+		NextHash:   nextHashString,
 	}
 
 	if *c.Verbosity == 1 {
@@ -1726,9 +1726,9 @@ func (state *gbtWorkState) blockTemplateResult(useCoinbaseValue bool, submitOld 
 
 		bTx := btcutil.NewTx(tx)
 		resultTx := btcjson.GetBlockTemplateResultTx{
-			Data:    hex.EncodeToString(txBuf.Bytes()),
-			TxID:    txID.String(),
-			Hash:    tx.WitnessHash().String(),
+			Data: hex.EncodeToString(txBuf.Bytes()),
+			TxID: txID.String(),
+			// Hash:    tx.WitnessHash().String(),
 			Depends: depends,
 			Fee:     template.Fees[i],
 			SigOps:  template.SigOpCosts[i],
@@ -2984,9 +2984,9 @@ func createVinListPrevOut(s *rpcServer, mtx *wire.MsgTx, chainParams *chaincfg.P
 			},
 		}
 
-		if len(txIn.Witness) != 0 {
-			vinEntry.Witness = witnessToHex(txIn.Witness)
-		}
+		// if len(txIn.Witness) != 0 {
+		// 	vinEntry.Witness = witnessToHex(txIn.Witness)
+		// }
 
 		// Add the entry to the list now if it already passed the filter
 		// since the previous output might not be available.
@@ -3579,36 +3579,36 @@ func handleValidateAddress(s *rpcServer, cmd interface{}, closeChan <-chan struc
 		return result, nil
 	}
 
-	switch addr := addr.(type) {
-	case *btcutil.AddressPubKeyHash:
-		result.IsScript = btcjson.Bool(false)
-		result.IsWitness = btcjson.Bool(false)
+	// switch addr := addr.(type) {
+	// case *btcutil.AddressPubKeyHash:
+	// 	result.IsScript = btcjson.Bool(false)
+	// 	result.IsWitness = btcjson.Bool(false)
 
-	case *btcutil.AddressScriptHash:
-		result.IsScript = btcjson.Bool(true)
-		result.IsWitness = btcjson.Bool(false)
+	// case *btcutil.AddressScriptHash:
+	// 	result.IsScript = btcjson.Bool(true)
+	// 	result.IsWitness = btcjson.Bool(false)
 
-	case *btcutil.AddressPubKey:
-		result.IsScript = btcjson.Bool(false)
-		result.IsWitness = btcjson.Bool(false)
+	// case *btcutil.AddressPubKey:
+	// 	result.IsScript = btcjson.Bool(false)
+	// 	result.IsWitness = btcjson.Bool(false)
 
-	case *btcutil.AddressWitnessPubKeyHash:
-		result.IsScript = btcjson.Bool(false)
-		result.IsWitness = btcjson.Bool(true)
-		result.WitnessVersion = btcjson.Int32(int32(addr.WitnessVersion()))
-		result.WitnessProgram = btcjson.String(hex.EncodeToString(addr.WitnessProgram()))
+	// case *btcutil.AddressWitnessPubKeyHash:
+	// 	result.IsScript = btcjson.Bool(false)
+	// 	result.IsWitness = btcjson.Bool(true)
+	// 	result.WitnessVersion = btcjson.Int32(int32(addr.WitnessVersion()))
+	// 	result.WitnessProgram = btcjson.String(hex.EncodeToString(addr.WitnessProgram()))
 
-	case *btcutil.AddressWitnessScriptHash:
-		result.IsScript = btcjson.Bool(true)
-		result.IsWitness = btcjson.Bool(true)
-		result.WitnessVersion = btcjson.Int32(int32(addr.WitnessVersion()))
-		result.WitnessProgram = btcjson.String(hex.EncodeToString(addr.WitnessProgram()))
+	// case *btcutil.AddressWitnessScriptHash:
+	// 	result.IsScript = btcjson.Bool(true)
+	// 	result.IsWitness = btcjson.Bool(true)
+	// 	result.WitnessVersion = btcjson.Int32(int32(addr.WitnessVersion()))
+	// 	result.WitnessProgram = btcjson.String(hex.EncodeToString(addr.WitnessProgram()))
 
-	default:
-		// Handle the case when a new Address is supported by btcutil, but none
-		// of the cases were matched in the switch block. The current behaviour
-		// is to do nothing, and only populate the Address and IsValid fields.
-	}
+	// default:
+	// 	// Handle the case when a new Address is supported by btcutil, but none
+	// 	// of the cases were matched in the switch block. The current behaviour
+	// 	// is to do nothing, and only populate the Address and IsValid fields.
+	// }
 
 	result.Address = addr.EncodeAddress()
 	result.IsValid = true
