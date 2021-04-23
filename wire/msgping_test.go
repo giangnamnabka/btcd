@@ -50,7 +50,7 @@ func TestPing(t *testing.T) {
 func TestPingBIP0031(t *testing.T) {
 	// Use the protocol version just prior to BIP0031Version changes.
 	pver := BIP0031Version
-	enc := BaseEncoding
+	// enc := BaseEncoding
 
 	nonce, err := RandomUint64()
 	if err != nil {

@@ -236,7 +236,7 @@ var MainNetParams = Params{
 // 	ScriptHashAddrID: 0xc4, // starts with 2
 // }
 
-// TestNet3Params defines the network parameters for the test Bitcoin network
+// TestNet4Params defines the network parameters for the test Bitcoin network
 // (version 3).  Not to be confused with the regression test network, this
 // network is sometimes simply called "testnet".
 var TestNet4Params = Params{

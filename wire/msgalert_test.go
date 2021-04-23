@@ -16,7 +16,7 @@ import (
 // TestMsgAlert tests the MsgAlert API.
 func TestMsgAlert(t *testing.T) {
 	pver := ProtocolVersion
-	encoding := BaseEncoding
+	// encoding := BaseEncoding
 	serializedpayload := []byte("some message")
 	signature := []byte("some sig")
 
@@ -182,7 +182,7 @@ func TestMsgAlertWire(t *testing.T) {
 // of MsgAlert to confirm error paths work correctly.
 func TestMsgAlertWireErrors(t *testing.T) {
 	pver := ProtocolVersion
-	encoding := BaseEncoding
+	// encoding := BaseEncoding
 
 	baseMsgAlert := NewMsgAlert([]byte("some payload"), []byte("somesig"))
 	baseMsgAlertEncoded := []byte{

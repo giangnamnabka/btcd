@@ -45,7 +45,7 @@ func TestRejectCodeStringer(t *testing.T) {
 // TestRejectLatest tests the MsgPong API against the latest protocol version.
 func TestRejectLatest(t *testing.T) {
 	pver := ProtocolVersion
-	enc := BaseEncoding
+	// enc := BaseEncoding
 
 	// Create reject message data.
 	rejCommand := (&MsgBlock{}).Command()
@@ -124,7 +124,7 @@ func TestRejectLatest(t *testing.T) {
 func TestRejectBeforeAdded(t *testing.T) {
 	// Use the protocol version just prior to RejectVersion.
 	pver := RejectVersion - 1
-	enc := BaseEncoding
+	// enc := BaseEncoding
 
 	// Create reject message data.
 	rejCommand := (&MsgBlock{}).Command()

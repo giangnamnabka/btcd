@@ -15,7 +15,7 @@ import (
 // version.
 func TestFilterLoadLatest(t *testing.T) {
 	pver := ProtocolVersion
-	enc := BaseEncoding
+	// enc := BaseEncoding
 
 	data := []byte{0x01, 0x02}
 	msg := NewMsgFilterLoad(data, 10, 0, 0)
@@ -186,7 +186,7 @@ func TestFilterLoadWireErrors(t *testing.T) {
 	for i, test := range tests {
 		// Encode to wire format.
 		w := newFixedWriter(test.max)
-		err := test.in.BtcEncode(w, test.pver, test.enc)
+		err := test.in.BtcEncode(w, test.pver)
 		if reflect.TypeOf(err) != reflect.TypeOf(test.writeErr) {
 			t.Errorf("BtcEncode #%d wrong error got: %v, want: %v",
 				i, err, test.writeErr)

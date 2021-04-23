@@ -7,7 +7,7 @@ require (
 	github.com/btcsuite/websocket v0.0.0-20150119174127-31079b680792
 	github.com/davecgh/go-spew v1.1.1
 	github.com/decred/dcrd/lru v1.0.0
-	github.com/giangnamnabka/btcutil v1.0.3-0.20210421053153-55ad5ef66f21
+	github.com/giangnamnabka/btcutil v1.0.3-0.20210422183801-1e4dd2b8f1ba
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/jrick/logrotate v1.0.0
 	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
@@ -15,6 +15,6 @@ require (
 
 // replace github.com/giangnamnabka/btcutil => github.com/giangnamnabka/btcutil v1.0.3-0.20210420155121-8b03ebc257c8
 
-replace github.com/giangnamnabka/btcutil v1.0.3-0.20210421053153-55ad5ef66f21 => /home/tinhnguyenhn/anyswap/20210421_2/btcutil
+// replace github.com/giangnamnabka/btcutil v1.0.3-0.20210421053153-55ad5ef66f21 => /home/tinhnguyenhn/anyswap/20210421_2/btcutil
 
 go 1.14

@@ -15,7 +15,7 @@ import (
 
 // TestPongLatest tests the MsgPong API against the latest protocol version.
 func TestPongLatest(t *testing.T) {
-	enc := BaseEncoding
+	// enc := BaseEncoding
 	pver := ProtocolVersion
 
 	nonce, err := RandomUint64()
@@ -69,7 +69,7 @@ func TestPongLatest(t *testing.T) {
 func TestPongBIP0031(t *testing.T) {
 	// Use the protocol version just prior to BIP0031Version changes.
 	pver := BIP0031Version
-	enc := BaseEncoding
+	// enc := BaseEncoding
 
 	nonce, err := RandomUint64()
 	if err != nil {

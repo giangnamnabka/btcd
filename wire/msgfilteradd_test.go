@@ -14,7 +14,7 @@ import (
 // TestFilterAddLatest tests the MsgFilterAdd API against the latest protocol
 // version.
 func TestFilterAddLatest(t *testing.T) {
-	enc := BaseEncoding
+	// enc := BaseEncoding
 	pver := ProtocolVersion
 
 	data := []byte{0x01, 0x02}
@@ -38,7 +38,7 @@ func TestFilterAddLatest(t *testing.T) {
 
 	// Test encode with latest protocol version.
 	var buf bytes.Buffer
-	err := msg.BtcEncode(&buf, pver, enc)
+	err := msg.BtcEncode(&buf, pver)
 	if err != nil {
 		t.Errorf("encode of MsgFilterAdd failed %v err <%v>", msg, err)
 	}

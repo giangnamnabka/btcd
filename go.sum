@@ -30,6 +30,7 @@ github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/giangnamnabka/btcd v0.20.1-beta/go.mod h1:wVuoA8VJLEcwgqHBwHmzLRazpKxTv13Px/pDuV7OomQ=
 github.com/giangnamnabka/btcd v0.21.0-beta.0.20210421053028-91430c8dc7b0/go.mod h1:6sBm0xbUgyhW0MAURQKabspUfF2i4SnPFnX/fDQi+Os=
+github.com/giangnamnabka/btcd v0.21.0-beta.0.20210422182616-7cc8292ed1fd/go.mod h1:l9o40Mlq/YhpDFl9KCcK59xUCGvzlu6sf4FNxvtZoh8=
 github.com/giangnamnabka/btcutil v0.0.0-20190425235716-9e5f4b9a998d h1:yJzD/yFppdVCf6ApMkVy8cUxV0XrxdP9rVf6D87/Mng=
 github.com/giangnamnabka/btcutil v0.0.0-20190425235716-9e5f4b9a998d/go.mod h1:+5NJ2+qvTyV9exUAL/rxXi3DcLg2Ts+ymUAY5y4NvMg=
 github.com/giangnamnabka/btcutil v1.0.2 h1:9iZ1Terx9fMIOtq1VrwdqfsATL9MC2l8ZrUY6YZ2uts=
@@ -38,6 +39,9 @@ github.com/giangnamnabka/btcutil v1.0.3-0.20201208143702-a53e38424cce h1:YtWJF7R
 github.com/giangnamnabka/btcutil v1.0.3-0.20201208143702-a53e38424cce/go.mod h1:0DVlHczLPewLcPGEIeUEzfOJhqGPQ0mJJRDBtD307+o=
 github.com/giangnamnabka/btcutil v1.0.3-0.20210419010950-7174e438d77e/go.mod h1:PC5TApGhd7q8rjdQCruqaHnkrd1bjQLy3XTCU+XeS7s=
 github.com/giangnamnabka/btcutil v1.0.3-0.20210420085859-f52a76232ea5/go.mod h1:IhwfcJ95gtIjL/+wFuB+w32ZZhQlYzKwFP13lvVze7s=
+github.com/giangnamnabka/btcutil v1.0.3-0.20210421053153-55ad5ef66f21/go.mod h1:VivUYyPuBJnFqU2xSya2PO3/StUAjw6j5/0LjdSgJDI=
+github.com/giangnamnabka/btcutil v1.0.3-0.20210422183801-1e4dd2b8f1ba h1:mOOe8OPh4afV/4eX61+0E1XNdvu/Npi0A8qKnE1BkQc=
+github.com/giangnamnabka/btcutil v1.0.3-0.20210422183801-1e4dd2b8f1ba/go.mod h1:86wVJhO98wSjOrE7Pc9j79xqp8zoLiZCeLRtvLAoW3Y=
 github.com/golang/protobuf v1.2.0 h1:P3YflyNX/ehuJFLhxviNdFxQPkGK5cDcApsge1SqnvM=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/hpcloud/tail v1.0.0 h1:nfCOvKYfkgYP8hkirhJocXT2+zOD8yUNjXaWfTlyFKI=

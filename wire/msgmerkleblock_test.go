@@ -19,7 +19,7 @@ import (
 // TestMerkleBlock tests the MsgMerkleBlock API.
 func TestMerkleBlock(t *testing.T) {
 	pver := ProtocolVersion
-	enc := BaseEncoding
+	// enc := BaseEncoding
 
 	// Block 1 header.
 	prevHash := &blockOne.Header.PrevBlock

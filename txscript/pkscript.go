@@ -38,7 +38,7 @@ const (
 	pubKeyHashLen = 25
 
 	// witnessV0PubKeyHashLen is the length of a P2WPKH script.
-	witnessV0PubKeyHashLen = 22
+	// witnessV0PubKeyHashLen = 22
 
 	// scriptHashLen is the length of a P2SH script.
 	scriptHashLen = 23
