@@ -165,8 +165,12 @@ func typeOfScript(pops []parsedOpcode) ScriptClass {
 		return PubKeyTy
 	} else if isPubkeyHash(pops) {
 		return PubKeyHashTy
+	} else if isWitnessPubKeyHash(pops) {
+		return WitnessV0PubKeyHashTy
 	} else if isScriptHash(pops) {
 		return ScriptHashTy
+	} else if isWitnessScriptHash(pops) {
+		return WitnessV0ScriptHashTy
 	} else if isMultiSig(pops) {
 		return MultiSigTy
 	} else if isNullData(pops) {
@@ -215,7 +219,14 @@ func expectedInputs(pops []parsedOpcode, class ScriptClass) int {
 	case PubKeyHashTy:
 		return 2
 
+	case WitnessV0PubKeyHashTy:
+		return 2
+
 	case ScriptHashTy:
+		// Not including script.  That is handled by the caller.
+		return 1
+
+	case WitnessV0ScriptHashTy:
 		// Not including script.  That is handled by the caller.
 		return 1
 
@@ -398,11 +409,23 @@ func payToPubKeyHashScript(pubKeyHash []byte) ([]byte, error) {
 		Script()
 }
 
+// payToWitnessPubKeyHashScript creates a new script to pay to a version 0
+// pubkey hash witness program. The passed hash is expected to be valid.
+func payToWitnessPubKeyHashScript(pubKeyHash []byte) ([]byte, error) {
+	return NewScriptBuilder().AddOp(OP_0).AddData(pubKeyHash).Script()
+}
+
 // payToScriptHashScript creates a new script to pay a transaction output to a
 // script hash. It is expected that the input is a valid hash.
 func payToScriptHashScript(scriptHash []byte) ([]byte, error) {
 	return NewScriptBuilder().AddOp(OP_HASH160).AddData(scriptHash).
 		AddOp(OP_EQUAL).Script()
+}
+
+// payToWitnessPubKeyHashScript creates a new script to pay to a version 0
+// script hash witness program. The passed hash is expected to be valid.
+func payToWitnessScriptHashScript(scriptHash []byte) ([]byte, error) {
+	return NewScriptBuilder().AddOp(OP_0).AddData(scriptHash).Script()
 }
 
 // payToPubkeyScript creates a new script to pay a transaction output to a
@@ -438,6 +461,19 @@ func PayToAddrScript(addr btcutil.Address) ([]byte, error) {
 				nilAddrErrStr)
 		}
 		return payToPubKeyScript(addr.ScriptAddress())
+
+		// case *btcutil.AddressWitnessPubKeyHash:
+		// 	if addr == nil {
+		// 		return nil, scriptError(ErrUnsupportedAddress,
+		// 			nilAddrErrStr)
+		// 	}
+		// 	return payToWitnessPubKeyHashScript(addr.ScriptAddress())
+		// case *btcutil.AddressWitnessScriptHash:
+		// 	if addr == nil {
+		// 		return nil, scriptError(ErrUnsupportedAddress,
+		// 			nilAddrErrStr)
+		// 	}
+		// 	return payToWitnessScriptHashScript(addr.ScriptAddress())
 	}
 
 	str := fmt.Sprintf("unable to generate payment script for unsupported "+
@@ -528,6 +564,18 @@ func ExtractPkScriptAddrs(pkScript []byte, chainParams *chaincfg.Params) (Script
 			addrs = append(addrs, addr)
 		}
 
+	// case WitnessV0PubKeyHashTy:
+	// 	// A pay-to-witness-pubkey-hash script is of thw form:
+	// 	//  OP_0 <20-byte hash>
+	// 	// Therefore, the pubkey hash is the second item on the stack.
+	// 	// Skip the pubkey hash if it's invalid for some reason.
+	// 	requiredSigs = 1
+	// 	addr, err := btcutil.NewAddressWitnessPubKeyHash(pops[1].data,
+	// 		chainParams)
+	// 	if err == nil {
+	// 		addrs = append(addrs, addr)
+	// 	}
+
 	case PubKeyTy:
 		// A pay-to-pubkey script is of the form:
 		//  <pubkey> OP_CHECKSIG
@@ -550,6 +598,18 @@ func ExtractPkScriptAddrs(pkScript []byte, chainParams *chaincfg.Params) (Script
 		if err == nil {
 			addrs = append(addrs, addr)
 		}
+
+	// case WitnessV0ScriptHashTy:
+	// 	// A pay-to-witness-script-hash script is of the form:
+	// 	//  OP_0 <32-byte hash>
+	// 	// Therefore, the script hash is the second item on the stack.
+	// 	// Skip the script hash if it's invalid for some reason.
+	// 	requiredSigs = 1
+	// 	addr, err := btcutil.NewAddressWitnessScriptHash(pops[1].data,
+	// 		chainParams)
+	// 	if err == nil {
+	// 		addrs = append(addrs, addr)
+	// 	}
 
 	case MultiSigTy:
 		// A multi-signature script is of the form:

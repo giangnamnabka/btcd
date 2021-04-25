@@ -417,7 +417,9 @@ func TestComputePkScript(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			valid := test.pkScript != nil
-			pkScript, err := ComputePkScript(test.sigScript)
+			pkScript, err := ComputePkScript(
+				test.sigScript,
+			)
 			if err != nil && valid {
 				t.Fatalf("unable to compute pkScript: %v", err)
 			}

@@ -215,7 +215,7 @@ func TestVersionWire(t *testing.T) {
 	for i, test := range tests {
 		// Encode the message to wire format.
 		var buf bytes.Buffer
-		err := test.in.BtcEncode(&buf, test.pver)
+		err := test.in.BtcEncode(&buf, test.pver, test.enc)
 		if err != nil {
 			t.Errorf("BtcEncode #%d error %v", i, err)
 			continue
@@ -229,7 +229,7 @@ func TestVersionWire(t *testing.T) {
 		// Decode the message from wire format.
 		var msg MsgVersion
 		rbuf := bytes.NewBuffer(test.buf)
-		err = msg.BtcDecode(rbuf, test.pver)
+		err = msg.BtcDecode(rbuf, test.pver, test.enc)
 		if err != nil {
 			t.Errorf("BtcDecode #%d error %v", i, err)
 			continue
@@ -249,12 +249,13 @@ func TestVersionWireErrors(t *testing.T) {
 	// because the test data is using bytes encoded with that protocol
 	// version.
 	pver := uint32(60002)
+	enc := BaseEncoding
 	wireErr := &MessageError{}
 
 	// Ensure calling MsgVersion.BtcDecode with a non *bytes.Buffer returns
 	// error.
 	fr := newFixedReader(0, []byte{})
-	if err := baseVersion.BtcDecode(fr, pver); err == nil {
+	if err := baseVersion.BtcDecode(fr, pver, enc); err == nil {
 		t.Errorf("Did not received error when calling " +
 			"MsgVersion.BtcDecode with non *bytes.Buffer")
 	}
@@ -324,7 +325,7 @@ func TestVersionWireErrors(t *testing.T) {
 	for i, test := range tests {
 		// Encode to wire format.
 		w := newFixedWriter(test.max)
-		err := test.in.BtcEncode(w, test.pver)
+		err := test.in.BtcEncode(w, test.pver, test.enc)
 		if reflect.TypeOf(err) != reflect.TypeOf(test.writeErr) {
 			t.Errorf("BtcEncode #%d wrong error got: %v, want: %v",
 				i, err, test.writeErr)
@@ -344,7 +345,7 @@ func TestVersionWireErrors(t *testing.T) {
 		// Decode from wire format.
 		var msg MsgVersion
 		buf := bytes.NewBuffer(test.buf[0:test.max])
-		err = msg.BtcDecode(buf, test.pver)
+		err = msg.BtcDecode(buf, test.pver, test.enc)
 		if reflect.TypeOf(err) != reflect.TypeOf(test.readErr) {
 			t.Errorf("BtcDecode #%d wrong error got: %v, want: %v",
 				i, err, test.readErr)
@@ -457,7 +458,7 @@ func TestVersionOptionalFields(t *testing.T) {
 		// Decode the message from wire format.
 		var msg MsgVersion
 		rbuf := bytes.NewBuffer(test.buf)
-		err := msg.BtcDecode(rbuf, test.pver)
+		err := msg.BtcDecode(rbuf, test.pver, test.enc)
 		if err != nil {
 			t.Errorf("BtcDecode #%d error %v", i, err)
 			continue

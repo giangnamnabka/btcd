@@ -45,7 +45,7 @@ func TestRejectCodeStringer(t *testing.T) {
 // TestRejectLatest tests the MsgPong API against the latest protocol version.
 func TestRejectLatest(t *testing.T) {
 	pver := ProtocolVersion
-	// enc := BaseEncoding
+	enc := BaseEncoding
 
 	// Create reject message data.
 	rejCommand := (&MsgBlock{}).Command()
@@ -87,14 +87,14 @@ func TestRejectLatest(t *testing.T) {
 
 	// Test encode with latest protocol version.
 	var buf bytes.Buffer
-	err := msg.BtcEncode(&buf, pver)
+	err := msg.BtcEncode(&buf, pver, enc)
 	if err != nil {
 		t.Errorf("encode of MsgReject failed %v err <%v>", msg, err)
 	}
 
 	// Test decode with latest protocol version.
 	readMsg := MsgReject{}
-	err = readMsg.BtcDecode(&buf, pver)
+	err = readMsg.BtcDecode(&buf, pver, enc)
 	if err != nil {
 		t.Errorf("decode of MsgReject failed %v err <%v>", buf.Bytes(),
 			err)
@@ -124,7 +124,7 @@ func TestRejectLatest(t *testing.T) {
 func TestRejectBeforeAdded(t *testing.T) {
 	// Use the protocol version just prior to RejectVersion.
 	pver := RejectVersion - 1
-	// enc := BaseEncoding
+	enc := BaseEncoding
 
 	// Create reject message data.
 	rejCommand := (&MsgBlock{}).Command()
@@ -144,7 +144,7 @@ func TestRejectBeforeAdded(t *testing.T) {
 
 	// Test encode with old protocol version.
 	var buf bytes.Buffer
-	err := msg.BtcEncode(&buf, pver)
+	err := msg.BtcEncode(&buf, pver, enc)
 	if err == nil {
 		t.Errorf("encode of MsgReject succeeded when it shouldn't "+
 			"have %v", msg)
@@ -152,7 +152,7 @@ func TestRejectBeforeAdded(t *testing.T) {
 
 	//	// Test decode with old protocol version.
 	readMsg := MsgReject{}
-	err = readMsg.BtcDecode(&buf, pver)
+	err = readMsg.BtcDecode(&buf, pver, enc)
 	if err == nil {
 		t.Errorf("decode of MsgReject succeeded when it shouldn't "+
 			"have %v", spew.Sdump(buf.Bytes()))
@@ -193,14 +193,14 @@ func TestRejectCrossProtocol(t *testing.T) {
 
 	// Encode with latest protocol version.
 	var buf bytes.Buffer
-	err := msg.BtcEncode(&buf, ProtocolVersion)
+	err := msg.BtcEncode(&buf, ProtocolVersion, BaseEncoding)
 	if err != nil {
 		t.Errorf("encode of MsgReject failed %v err <%v>", msg, err)
 	}
 
 	// Decode with old protocol version.
 	readMsg := MsgReject{}
-	err = readMsg.BtcDecode(&buf, RejectVersion-1)
+	err = readMsg.BtcDecode(&buf, RejectVersion-1, BaseEncoding)
 	if err == nil {
 		t.Errorf("encode of MsgReject succeeded when it shouldn't "+
 			"have %v", msg)
@@ -276,7 +276,7 @@ func TestRejectWire(t *testing.T) {
 	for i, test := range tests {
 		// Encode the message to wire format.
 		var buf bytes.Buffer
-		err := test.msg.BtcEncode(&buf, test.pver)
+		err := test.msg.BtcEncode(&buf, test.pver, test.enc)
 		if err != nil {
 			t.Errorf("BtcEncode #%d error %v", i, err)
 			continue
@@ -290,7 +290,7 @@ func TestRejectWire(t *testing.T) {
 		// Decode the message from wire format.
 		var msg MsgReject
 		rbuf := bytes.NewReader(test.buf)
-		err = msg.BtcDecode(rbuf, test.pver)
+		err = msg.BtcDecode(rbuf, test.pver, test.enc)
 		if err != nil {
 			t.Errorf("BtcDecode #%d error %v", i, err)
 			continue
@@ -349,7 +349,7 @@ func TestRejectWireErrors(t *testing.T) {
 	for i, test := range tests {
 		// Encode to wire format.
 		w := newFixedWriter(test.max)
-		err := test.in.BtcEncode(w, test.pver)
+		err := test.in.BtcEncode(w, test.pver, test.enc)
 		if reflect.TypeOf(err) != reflect.TypeOf(test.writeErr) {
 			t.Errorf("BtcEncode #%d wrong error got: %v, want: %v",
 				i, err, test.writeErr)
@@ -369,7 +369,7 @@ func TestRejectWireErrors(t *testing.T) {
 		// Decode from wire format.
 		var msg MsgReject
 		r := newFixedReader(test.max, test.buf)
-		err = msg.BtcDecode(r, test.pver)
+		err = msg.BtcDecode(r, test.pver, test.enc)
 		if reflect.TypeOf(err) != reflect.TypeOf(test.readErr) {
 			t.Errorf("BtcDecode #%d wrong error got: %v, want: %v",
 				i, err, test.readErr)

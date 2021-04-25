@@ -216,7 +216,7 @@ func CheckTransactionSanity(tx *btcutil.Tx) error {
 
 	// A transaction must not exceed the maximum allowed block payload when
 	// serialized.
-	serializedTxSize := tx.MsgTx().SerializeSize()
+	serializedTxSize := tx.MsgTx().SerializeSizeStripped()
 	if serializedTxSize > MaxBlockBaseSize {
 		str := fmt.Sprintf("serialized transaction is too big - got "+
 			"%d, max %d", serializedTxSize, MaxBlockBaseSize)
@@ -489,7 +489,7 @@ func checkBlockSanity(block *btcutil.Block, powLimit *big.Int, timeSource Median
 
 	// A block must not exceed the maximum allowed block payload when
 	// serialized.
-	serializedSize := msgBlock.SerializeSize()
+	serializedSize := msgBlock.SerializeSizeStripped()
 	if serializedSize > MaxBlockBaseSize {
 		str := fmt.Sprintf("serialized block is too big - got %d, "+
 			"max %d", serializedSize, MaxBlockBaseSize)
@@ -696,18 +696,18 @@ func (b *BlockChain) checkBlockHeaderContext(header *wire.BlockHeader, prevNode 
 		return ruleError(ErrForkTooOld, str)
 	}
 
-	// Reject outdated block versions once a majority of the network
-	// has upgraded.  These were originally voted on by BIP0034,
-	// BIP0065, and BIP0066.
-	params := b.chainParams
-	if header.Version < 2 && blockHeight >= params.BIP0034Height ||
-		header.Version < 3 && blockHeight >= params.BIP0066Height ||
-		header.Version < 4 && blockHeight >= params.BIP0065Height {
+	// // Reject outdated block versions once a majority of the network
+	// // has upgraded.  These were originally voted on by BIP0034,
+	// // BIP0065, and BIP0066.
+	// params := b.chainParams
+	// if header.Version < 2 && blockHeight >= params.BIP0034Height ||
+	// 	header.Version < 3 && blockHeight >= params.BIP0066Height ||
+	// 	header.Version < 4 && blockHeight >= params.BIP0065Height {
 
-		str := "new blocks with version %d are no longer valid"
-		str = fmt.Sprintf(str, header.Version)
-		return ruleError(ErrBlockVersionTooOld, str)
-	}
+	// 	str := "new blocks with version %d are no longer valid"
+	// 	str = fmt.Sprintf(str, header.Version)
+	// 	return ruleError(ErrBlockVersionTooOld, str)
+	// }
 
 	return nil
 }
@@ -764,19 +764,55 @@ func (b *BlockChain) checkBlockContext(block *btcutil.Block, prevNode *blockNode
 			}
 		}
 
-		// Ensure coinbase starts with serialized block heights for
-		// blocks whose version is the serializedHeightVersion or newer
-		// once a majority of the network has upgraded.  This is part of
-		// BIP0034.
-		if ShouldHaveSerializedBlockHeight(header) &&
-			blockHeight >= b.chainParams.BIP0034Height {
+		// // Ensure coinbase starts with serialized block heights for
+		// // blocks whose version is the serializedHeightVersion or newer
+		// // once a majority of the network has upgraded.  This is part of
+		// // BIP0034.
+		// if ShouldHaveSerializedBlockHeight(header) &&
+		// 	blockHeight >= b.chainParams.BIP0034Height {
 
-			coinbaseTx := block.Transactions()[0]
-			err := checkSerializedHeight(coinbaseTx, blockHeight)
-			if err != nil {
-				return err
-			}
-		}
+		// 	coinbaseTx := block.Transactions()[0]
+		// 	err := checkSerializedHeight(coinbaseTx, blockHeight)
+		// 	if err != nil {
+		// 		return err
+		// 	}
+		// }
+
+		// // Query for the Version Bits state for the segwit soft-fork
+		// // deployment. If segwit is active, we'll switch over to
+		// // enforcing all the new rules.
+		// segwitState, err := b.deploymentState(prevNode,
+		// 	chaincfg.DeploymentSegwit)
+		// if err != nil {
+		// 	return err
+		// }
+
+		// // If segwit is active, then we'll need to fully validate the
+		// // new witness commitment for adherence to the rules.
+		// if segwitState == ThresholdActive {
+		// 	// Validate the witness commitment (if any) within the
+		// 	// block.  This involves asserting that if the coinbase
+		// 	// contains the special commitment output, then this
+		// 	// merkle root matches a computed merkle root of all
+		// 	// the wtxid's of the transactions within the block. In
+		// 	// addition, various other checks against the
+		// 	// coinbase's witness stack.
+		// 	if err := ValidateWitnessCommitment(block); err != nil {
+		// 		return err
+		// 	}
+
+		// 	// Once the witness commitment, witness nonce, and sig
+		// 	// op cost have been validated, we can finally assert
+		// 	// that the block's weight doesn't exceed the current
+		// 	// consensus parameter.
+		// 	blockWeight := GetBlockWeight(block)
+		// 	if blockWeight > MaxBlockWeight {
+		// 		str := fmt.Sprintf("block's weight metric is "+
+		// 			"too high - got %v, max %v",
+		// 			blockWeight, MaxBlockWeight)
+		// 		return ruleError(ErrBlockWeightTooHigh, str)
+		// 	}
+		// }
 	}
 
 	return nil
@@ -971,28 +1007,28 @@ func (b *BlockChain) checkConnectBlock(node *blockNode, block *btcutil.Block, vi
 			"of expected %v", view.BestHash(), parentHash))
 	}
 
-	// BIP0030 added a rule to prevent blocks which contain duplicate
-	// transactions that 'overwrite' older transactions which are not fully
-	// spent.  See the documentation for checkBIP0030 for more details.
-	//
-	// There are two blocks in the chain which violate this rule, so the
-	// check must be skipped for those blocks.  The isBIP0030Node function
-	// is used to determine if this block is one of the two blocks that must
-	// be skipped.
-	//
-	// In addition, as of BIP0034, duplicate coinbases are no longer
-	// possible due to its requirement for including the block height in the
-	// coinbase and thus it is no longer possible to create transactions
-	// that 'overwrite' older ones.  Therefore, only enforce the rule if
-	// BIP0034 is not yet active.  This is a useful optimization because the
-	// BIP0030 check is expensive since it involves a ton of cache misses in
-	// the utxoset.
-	if !isBIP0030Node(node) && (node.height < b.chainParams.BIP0034Height) {
-		err := b.checkBIP0030(node, block, view)
-		if err != nil {
-			return err
-		}
-	}
+	// // BIP0030 added a rule to prevent blocks which contain duplicate
+	// // transactions that 'overwrite' older transactions which are not fully
+	// // spent.  See the documentation for checkBIP0030 for more details.
+	// //
+	// // There are two blocks in the chain which violate this rule, so the
+	// // check must be skipped for those blocks.  The isBIP0030Node function
+	// // is used to determine if this block is one of the two blocks that must
+	// // be skipped.
+	// //
+	// // In addition, as of BIP0034, duplicate coinbases are no longer
+	// // possible due to its requirement for including the block height in the
+	// // coinbase and thus it is no longer possible to create transactions
+	// // that 'overwrite' older ones.  Therefore, only enforce the rule if
+	// // BIP0034 is not yet active.  This is a useful optimization because the
+	// // BIP0030 check is expensive since it involves a ton of cache misses in
+	// // the utxoset.
+	// if !isBIP0030Node(node) && (node.height < b.chainParams.BIP0034Height) {
+	// 	err := b.checkBIP0030(node, block, view)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// }
 
 	// Load all of the utxos referenced by the inputs for all transactions
 	// in the block don't already exist in the utxo view from the database.
@@ -1010,14 +1046,14 @@ func (b *BlockChain) checkConnectBlock(node *blockNode, block *btcutil.Block, vi
 	// https://en.bitcoin.it/wiki/BIP_0016 for more details.
 	enforceBIP0016 := node.timestamp >= txscript.Bip16Activation.Unix()
 
-	// Query for the Version Bits state for the segwit soft-fork
-	// deployment. If segwit is active, we'll switch over to enforcing all
-	// the new rules.
-	segwitState, err := b.deploymentState(node.parent, chaincfg.DeploymentSegwit)
-	if err != nil {
-		return err
-	}
-	enforceSegWit := segwitState == ThresholdActive
+	// // Query for the Version Bits state for the segwit soft-fork
+	// // deployment. If segwit is active, we'll switch over to enforcing all
+	// // the new rules.
+	// segwitState, err := b.deploymentState(node.parent, chaincfg.DeploymentSegwit)
+	// if err != nil {
+	// 	return err
+	// }
+	// enforceSegWit := segwitState == ThresholdActive
 
 	// The number of signature operations must be less than the maximum
 	// allowed per block.  Note that the preliminary sanity checks on a
@@ -1034,8 +1070,7 @@ func (b *BlockChain) checkConnectBlock(node *blockNode, block *btcutil.Block, vi
 		// countP2SHSigOps for whether or not the transaction is
 		// a coinbase transaction rather than having to do a
 		// full coinbase check again.
-		sigOpCost, err := GetSigOpCost(tx, i == 0, view, enforceBIP0016,
-			enforceSegWit)
+		sigOpCost, err := GetSigOpCost(tx, i == 0, view, enforceBIP0016)
 		if err != nil {
 			return err
 		}
@@ -1123,18 +1158,18 @@ func (b *BlockChain) checkConnectBlock(node *blockNode, block *btcutil.Block, vi
 		scriptFlags |= txscript.ScriptBip16
 	}
 
-	// Enforce DER signatures for block versions 3+ once the historical
-	// activation threshold has been reached.  This is part of BIP0066.
-	blockHeader := &block.MsgBlock().Header
-	if blockHeader.Version >= 3 && node.height >= b.chainParams.BIP0066Height {
-		scriptFlags |= txscript.ScriptVerifyDERSignatures
-	}
+	// // Enforce DER signatures for block versions 3+ once the historical
+	// // activation threshold has been reached.  This is part of BIP0066.
+	// blockHeader := &block.MsgBlock().Header
+	// if blockHeader.Version >= 3 && node.height >= b.chainParams.BIP0066Height {
+	// 	scriptFlags |= txscript.ScriptVerifyDERSignatures
+	// }
 
-	// Enforce CHECKLOCKTIMEVERIFY for block versions 4+ once the historical
-	// activation threshold has been reached.  This is part of BIP0065.
-	if blockHeader.Version >= 4 && node.height >= b.chainParams.BIP0065Height {
-		scriptFlags |= txscript.ScriptVerifyCheckLockTimeVerify
-	}
+	// // Enforce CHECKLOCKTIMEVERIFY for block versions 4+ once the historical
+	// // activation threshold has been reached.  This is part of BIP0065.
+	// if blockHeader.Version >= 4 && node.height >= b.chainParams.BIP0065Height {
+	// 	scriptFlags |= txscript.ScriptVerifyCheckLockTimeVerify
+	// }
 
 	// Enforce CHECKSEQUENCEVERIFY during all block validation checks once
 	// the soft-fork deployment is fully active.
@@ -1175,12 +1210,12 @@ func (b *BlockChain) checkConnectBlock(node *blockNode, block *btcutil.Block, vi
 		}
 	}
 
-	// Enforce the segwit soft-fork package once the soft-fork has shifted
-	// into the "active" version bits state.
-	if enforceSegWit {
-		scriptFlags |= txscript.ScriptVerifyWitness
-		scriptFlags |= txscript.ScriptStrictMultiSig
-	}
+	// // Enforce the segwit soft-fork package once the soft-fork has shifted
+	// // into the "active" version bits state.
+	// if enforceSegWit {
+	// 	scriptFlags |= txscript.ScriptVerifyWitness
+	// 	scriptFlags |= txscript.ScriptStrictMultiSig
+	// }
 
 	// Now that the inexpensive checks are done and have passed, verify the
 	// transactions are actually allowed to spend the coins by running the

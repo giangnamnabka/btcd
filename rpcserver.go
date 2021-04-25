@@ -505,7 +505,7 @@ func peerExists(connMgr rpcserverConnManager, addr string, nodeID int32) bool {
 // latest protocol version and returns a hex-encoded string of the result.
 func messageToHex(msg wire.Message) (string, error) {
 	var buf bytes.Buffer
-	if err := msg.BtcEncode(&buf, maxProtocolVersion); err != nil {
+	if err := msg.BtcEncode(&buf, maxProtocolVersion, wire.WitnessEncoding); err != nil {
 		context := fmt.Sprintf("Failed to encode msg of type %T", msg)
 		return "", internalRPCError(err.Error(), context)
 	}
@@ -894,17 +894,17 @@ func handleGenerate(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
 		}
 	}
 
-	// Respond with an error if there's virtually 0 chance of mining a block
-	// with the CPU.
-	if !s.cfg.ChainParams.GenerateSupported {
-		return nil, &btcjson.RPCError{
-			Code: btcjson.ErrRPCDifficulty,
-			Message: fmt.Sprintf("No support for `generate` on "+
-				"the current network, %s, as it's unlikely to "+
-				"be possible to mine a block with the CPU.",
-				s.cfg.ChainParams.Net),
-		}
-	}
+	// // Respond with an error if there's virtually 0 chance of mining a block
+	// // with the CPU.
+	// if !s.cfg.ChainParams.GenerateSupported {
+	// 	return nil, &btcjson.RPCError{
+	// 		Code: btcjson.ErrRPCDifficulty,
+	// 		Message: fmt.Sprintf("No support for `generate` on "+
+	// 			"the current network, %s, as it's unlikely to "+
+	// 			"be possible to mine a block with the CPU.",
+	// 			s.cfg.ChainParams.Net),
+	// 	}
+	// }
 
 	c := cmd.(*btcjson.GenerateCmd)
 
@@ -1133,11 +1133,11 @@ func handleGetBlock(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
 		Confirmations: int64(1 + best.Height - blockHeight),
 		Height:        int64(blockHeight),
 		Size:          int32(len(blkBytes)),
-		// StrippedSize:  int32(blk.MsgBlock().SerializeSizeStripped()),
-		Weight:     int32(blockchain.GetBlockWeight(blk)),
-		Bits:       strconv.FormatInt(int64(blockHeader.Bits), 16),
-		Difficulty: getDifficultyRatio(blockHeader.Bits, params),
-		NextHash:   nextHashString,
+		StrippedSize:  int32(blk.MsgBlock().SerializeSizeStripped()),
+		Weight:        int32(blockchain.GetBlockWeight(blk)),
+		Bits:          strconv.FormatInt(int64(blockHeader.Bits), 16),
+		Difficulty:    getDifficultyRatio(blockHeader.Bits, params),
+		NextHash:      nextHashString,
 	}
 
 	if *c.Verbosity == 1 {
@@ -1206,10 +1206,10 @@ func handleGetBlockChainInfo(s *rpcServer, cmd interface{}, closeChan <-chan str
 		},
 	}
 
-	// Next, populate the response with information describing the current
-	// status of soft-forks deployed via the super-majority block
-	// signalling mechanism.
-	height := chainSnapshot.Height
+	// // Next, populate the response with information describing the current
+	// // status of soft-forks deployed via the super-majority block
+	// // signalling mechanism.
+	// height := chainSnapshot.Height
 	chainInfo.SoftForks.SoftForks = []*btcjson.SoftForkDescription{
 		{
 			ID:      "bip34",
@@ -1217,7 +1217,7 @@ func handleGetBlockChainInfo(s *rpcServer, cmd interface{}, closeChan <-chan str
 			Reject: struct {
 				Status bool `json:"status"`
 			}{
-				Status: height >= params.BIP0034Height,
+				// Status: height >= params.BIP0034Height,
 			},
 		},
 		{
@@ -1226,7 +1226,7 @@ func handleGetBlockChainInfo(s *rpcServer, cmd interface{}, closeChan <-chan str
 			Reject: struct {
 				Status bool `json:"status"`
 			}{
-				Status: height >= params.BIP0066Height,
+				// Status: height >= params.BIP0066Height,
 			},
 		},
 		{
@@ -1235,7 +1235,7 @@ func handleGetBlockChainInfo(s *rpcServer, cmd interface{}, closeChan <-chan str
 			Reject: struct {
 				Status bool `json:"status"`
 			}{
-				Status: height >= params.BIP0065Height,
+				// Status: height >= params.BIP0065Height,
 			},
 		},
 	}

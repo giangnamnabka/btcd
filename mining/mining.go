@@ -601,15 +601,15 @@ mempoolLoop:
 	blockSigOpCost := coinbaseSigOpCost
 	totalFees := int64(0)
 
-	// Query the version bits state to see if segwit has been activated, if
-	// so then this means that we'll include any transactions with witness
-	// data in the mempool, and also add the witness commitment as an
-	// OP_RETURN output in the coinbase transaction.
-	segwitState, err := g.chain.ThresholdState(chaincfg.DeploymentSegwit)
-	if err != nil {
-		return nil, err
-	}
-	segwitActive := segwitState == blockchain.ThresholdActive
+	// // Query the version bits state to see if segwit has been activated, if
+	// // so then this means that we'll include any transactions with witness
+	// // data in the mempool, and also add the witness commitment as an
+	// // OP_RETURN output in the coinbase transaction.
+	// segwitState, err := g.chain.ThresholdState(chaincfg.DeploymentSegwit)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// segwitActive := segwitState == blockchain.ThresholdActive
 
 	// witnessIncluded := false
 
@@ -677,7 +677,7 @@ mempoolLoop:
 		// Enforce maximum signature operation cost per block.  Also
 		// check for overflow.
 		sigOpCost, err := blockchain.GetSigOpCost(tx, false,
-			blockUtxos, true, segwitActive)
+			blockUtxos, true)
 		if err != nil {
 			log.Tracef("Skipping tx %s due to error in "+
 				"GetSigOpCost: %v", tx.Hash(), err)
