@@ -178,8 +178,8 @@ type Params struct {
 	// // GenerateSupported specifies whether or not CPU mining is allowed.
 	// GenerateSupported bool
 
-	// // Checkpoints ordered from oldest to newest.
-	// Checkpoints []Checkpoint
+	// Checkpoints ordered from oldest to newest.
+	Checkpoints []Checkpoint
 
 	// These fields are related to voting on consensus rule changes as
 	// defined by BIP0009.
@@ -213,8 +213,8 @@ type Params struct {
 	// WitnessScriptHashAddrID byte // First byte of a P2WSH address
 
 	// // BIP32 hierarchical deterministic extended key magics
-	// HDPrivateKeyID [4]byte
-	// HDPublicKeyID  [4]byte
+	HDPrivateKeyID [4]byte
+	HDPublicKeyID  [4]byte
 
 	// // BIP44 coin type used in the hierarchical deterministic path for
 	// // address generation.
@@ -320,8 +320,8 @@ var MainNetParams = Params{
 	// WitnessScriptHashAddrID: 0x0A, // starts with 7Xh
 
 	// // BIP32 hierarchical deterministic extended key magics
-	// HDPrivateKeyID: [4]byte{0x04, 0x88, 0xad, 0xe4}, // starts with xprv
-	// HDPublicKeyID:  [4]byte{0x04, 0x88, 0xb2, 0x1e}, // starts with xpub
+	HDPrivateKeyID: [4]byte{0x04, 0x88, 0xad, 0xe4}, // starts with xprv
+	HDPublicKeyID:  [4]byte{0x04, 0x88, 0xb2, 0x1e}, // starts with xpub
 
 	// // BIP44 coin type used in the hierarchical deterministic path for
 	// // address generation.
@@ -394,8 +394,8 @@ var RegressionNetParams = Params{
 	PrivateKeyID:     0xef, // starts with 9 (uncompressed) or c (compressed)
 
 	// // BIP32 hierarchical deterministic extended key magics
-	// HDPrivateKeyID: [4]byte{0x04, 0x35, 0x83, 0x94}, // starts with tprv
-	// HDPublicKeyID:  [4]byte{0x04, 0x35, 0x87, 0xcf}, // starts with tpub
+	HDPrivateKeyID: [4]byte{0x04, 0x35, 0x83, 0x94}, // starts with tprv
+	HDPublicKeyID:  [4]byte{0x04, 0x35, 0x87, 0xcf}, // starts with tpub
 
 	// // BIP44 coin type used in the hierarchical deterministic path for
 	// // address generation.
@@ -490,8 +490,8 @@ var TestNet4Params = Params{
 	PrivateKeyID: 0xef, // starts with 9 (uncompressed) or c (compressed)
 
 	// // BIP32 hierarchical deterministic extended key magics
-	// HDPrivateKeyID: [4]byte{0x04, 0x35, 0x83, 0x94}, // starts with tprv
-	// HDPublicKeyID:  [4]byte{0x04, 0x35, 0x87, 0xcf}, // starts with tpub
+	HDPrivateKeyID: [4]byte{0x04, 0x35, 0x83, 0x94}, // starts with tprv
+	HDPublicKeyID:  [4]byte{0x04, 0x35, 0x87, 0xcf}, // starts with tpub
 
 	// // BIP44 coin type used in the hierarchical deterministic path for
 	// // address generation.
