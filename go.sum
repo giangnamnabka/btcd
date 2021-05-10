@@ -28,6 +28,8 @@ github.com/giangnamnabka/btcd v0.21.0-beta.0.20210508180704-81d6b80f4e66/go.mod 
 github.com/giangnamnabka/btcutil v1.0.3-0.20210421053153-55ad5ef66f21/go.mod h1:VivUYyPuBJnFqU2xSya2PO3/StUAjw6j5/0LjdSgJDI=
 github.com/giangnamnabka/btcutil v1.0.3-0.20210422183801-1e4dd2b8f1ba h1:mOOe8OPh4afV/4eX61+0E1XNdvu/Npi0A8qKnE1BkQc=
 github.com/giangnamnabka/btcutil v1.0.3-0.20210422183801-1e4dd2b8f1ba/go.mod h1:86wVJhO98wSjOrE7Pc9j79xqp8zoLiZCeLRtvLAoW3Y=
+github.com/giangnamnabka/btcutil v1.0.3-0.20210508181914-e044d19524fe h1:E0nRW8DB3ojzXypPDWo8y1Y5sQpDDpMo5AU6xN+QKR8=
+github.com/giangnamnabka/btcutil v1.0.3-0.20210508181914-e044d19524fe/go.mod h1:xKxK1MB2doJ2iO7SeTgkHFKN6AIEOgd7K+2BOgjNWaY=
 github.com/golang/protobuf v1.2.0 h1:P3YflyNX/ehuJFLhxviNdFxQPkGK5cDcApsge1SqnvM=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/hpcloud/tail v1.0.0 h1:nfCOvKYfkgYP8hkirhJocXT2+zOD8yUNjXaWfTlyFKI=

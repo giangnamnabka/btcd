@@ -1086,8 +1086,14 @@ func handleGetBlock(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
 			Message: "Block not found",
 		}
 	}
-	// If verbosity is 0, return the serialized block as a hex encoded string.
-	if c.Verbosity != nil && *c.Verbosity == 0 {
+	// // If verbosity is 0, return the serialized block as a hex encoded string.
+	// if c.Verbosity != nil && *c.Verbosity == 0 {
+	// 	return hex.EncodeToString(blkBytes), nil
+	// }
+
+	// When the verbose flag isn't set, simply return the serialized block
+	// as a hex-encoded string.
+	if c.Verbose != nil && !*c.Verbose {
 		return hex.EncodeToString(blkBytes), nil
 	}
 
@@ -1140,7 +1146,7 @@ func handleGetBlock(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
 		NextHash:      nextHashString,
 	}
 
-	if *c.Verbosity == 1 {
+	if c.VerboseTx == nil || !*c.VerboseTx {
 		transactions := blk.Transactions()
 		txNames := make([]string, len(transactions))
 		for i, tx := range transactions {
