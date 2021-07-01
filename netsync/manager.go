@@ -12,7 +12,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/btcsuite/btcutil"
 	"github.com/giangnamnabka/btcd/blockchain"
 	"github.com/giangnamnabka/btcd/chaincfg"
 	"github.com/giangnamnabka/btcd/chaincfg/chainhash"
@@ -20,6 +19,7 @@ import (
 	"github.com/giangnamnabka/btcd/mempool"
 	peerpkg "github.com/giangnamnabka/btcd/peer"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 )
 
 const (

@@ -20,7 +20,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/btcsuite/btcutil"
 	"github.com/btcsuite/websocket"
 	"github.com/giangnamnabka/btcd/blockchain"
 	"github.com/giangnamnabka/btcd/btcjson"
@@ -29,6 +28,7 @@ import (
 	"github.com/giangnamnabka/btcd/database"
 	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 	"golang.org/x/crypto/ripemd160"
 )
 
@@ -2347,7 +2347,7 @@ func rescanBlock(wsc *wsClient, lookups *rescanKeys, blk *btcutil.Block) {
 			// attempting to spend to determine whether it is
 			// relevant to us.
 			pkScript, err := txscript.ComputePkScript(
-				txin.SignatureScript, txin.Witness,
+				txin.SignatureScript,
 			)
 			if err != nil {
 				continue

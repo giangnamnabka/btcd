@@ -22,8 +22,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/btcsuite/btcutil"
-	"github.com/btcsuite/btcutil/bloom"
 	"github.com/giangnamnabka/btcd/addrmgr"
 	"github.com/giangnamnabka/btcd/blockchain"
 	"github.com/giangnamnabka/btcd/blockchain/indexers"
@@ -38,6 +36,8 @@ import (
 	"github.com/giangnamnabka/btcd/peer"
 	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
+	"github.com/giangnamnabka/btcutil/bloom"
 )
 
 const (
@@ -2715,19 +2715,19 @@ func newServer(listenAddrs, agentBlacklist, agentWhitelist []string,
 		indexManager = indexers.NewManager(db, indexes)
 	}
 
-	// Merge given checkpoints with the default ones unless they are disabled.
-	var checkpoints []chaincfg.Checkpoint
-	if !cfg.DisableCheckpoints {
-		checkpoints = mergeCheckpoints(s.chainParams.Checkpoints, cfg.addCheckpoints)
-	}
+	// // Merge given checkpoints with the default ones unless they are disabled.
+	// var checkpoints []chaincfg.Checkpoint
+	// if !cfg.DisableCheckpoints {
+	// 	checkpoints = mergeCheckpoints(s.chainParams.Checkpoints, cfg.addCheckpoints)
+	// }
 
 	// Create a new block chain instance with the appropriate configuration.
 	var err error
 	s.chain, err = blockchain.New(&blockchain.Config{
-		DB:           s.db,
-		Interrupt:    interrupt,
-		ChainParams:  s.chainParams,
-		Checkpoints:  checkpoints,
+		DB:          s.db,
+		Interrupt:   interrupt,
+		ChainParams: s.chainParams,
+		// Checkpoints:  checkpoints,
 		TimeSource:   s.timeSource,
 		SigCache:     s.sigCache,
 		IndexManager: indexManager,

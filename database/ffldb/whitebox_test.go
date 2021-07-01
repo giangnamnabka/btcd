@@ -17,12 +17,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/btcsuite/btcutil"
 	"github.com/btcsuite/goleveldb/leveldb"
 	ldberrors "github.com/btcsuite/goleveldb/leveldb/errors"
 	"github.com/giangnamnabka/btcd/chaincfg"
 	"github.com/giangnamnabka/btcd/database"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 )
 
 var (

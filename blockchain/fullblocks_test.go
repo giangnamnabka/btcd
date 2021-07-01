@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/btcsuite/btcutil"
 	"github.com/giangnamnabka/btcd/blockchain"
 	"github.com/giangnamnabka/btcd/blockchain/fullblocktests"
 	"github.com/giangnamnabka/btcd/chaincfg"
@@ -21,6 +20,7 @@ import (
 	_ "github.com/giangnamnabka/btcd/database/ffldb"
 	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 )
 
 const (

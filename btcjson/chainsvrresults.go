@@ -11,8 +11,8 @@ import (
 
 	"github.com/giangnamnabka/btcd/chaincfg/chainhash"
 
-	"github.com/btcsuite/btcutil"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 )
 
 // GetBlockHeaderVerboseResult models the data from the getblockheader command when

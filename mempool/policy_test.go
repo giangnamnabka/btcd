@@ -9,12 +9,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/btcsuite/btcutil"
 	"github.com/giangnamnabka/btcd/btcec"
 	"github.com/giangnamnabka/btcd/chaincfg"
 	"github.com/giangnamnabka/btcd/chaincfg/chainhash"
 	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 )
 
 // TestCalcMinRequiredTxRelayFee tests the calcMinRequiredTxRelayFee API.

@@ -98,38 +98,38 @@ var regressionNetParams = &chaincfg.Params{
 	DefaultPort: "18444",
 
 	// Chain parameters
-	GenesisBlock:             &regTestGenesisBlock,
-	GenesisHash:              newHashFromStr("5bec7567af40504e0994db3b573c186fffcc4edefe096ff2e58d00523bd7e8a6"),
-	PowLimit:                 regressionPowLimit,
-	PowLimitBits:             0x207fffff,
-	CoinbaseMaturity:         100,
-	BIP0034Height:            100000000, // Not active - Permit ver 1 blocks
-	BIP0065Height:            1351,      // Used by regression tests
-	BIP0066Height:            1251,      // Used by regression tests
+	GenesisBlock:     &regTestGenesisBlock,
+	GenesisHash:      newHashFromStr("5bec7567af40504e0994db3b573c186fffcc4edefe096ff2e58d00523bd7e8a6"),
+	PowLimit:         regressionPowLimit,
+	PowLimitBits:     0x207fffff,
+	CoinbaseMaturity: 100,
+	// BIP0034Height:            100000000, // Not active - Permit ver 1 blocks
+	// BIP0065Height:            1351,      // Used by regression tests
+	// BIP0066Height:            1251,      // Used by regression tests
 	SubsidyReductionInterval: 150,
 	TargetTimespan:           time.Hour * 24 * 14, // 14 days
 	TargetTimePerBlock:       time.Minute * 10,    // 10 minutes
 	RetargetAdjustmentFactor: 4,                   // 25% less, 400% more
 	ReduceMinDifficulty:      true,
 	MinDiffReductionTime:     time.Minute * 20, // TargetTimePerBlock * 2
-	GenerateSupported:        true,
+	// GenerateSupported:        true,
 
-	// Checkpoints ordered from oldest to newest.
-	Checkpoints: nil,
+	// // Checkpoints ordered from oldest to newest.
+	// Checkpoints: nil,
 
 	// Mempool parameters
 	RelayNonStdTxs: true,
 
 	// Address encoding magics
-	PubKeyHashAddrID: 0x6f, // starts with m or n
-	ScriptHashAddrID: 0xc4, // starts with 2
-	PrivateKeyID:     0xef, // starts with 9 (uncompressed) or c (compressed)
+	PubKeyHashAddrID: 0x41,
+	ScriptHashAddrID: 0xB2,
+	PrivateKeyID:     0xB9,
 
-	// BIP32 hierarchical deterministic extended key magics
-	HDPrivateKeyID: [4]byte{0x04, 0x35, 0x83, 0x94}, // starts with tprv
-	HDPublicKeyID:  [4]byte{0x04, 0x35, 0x87, 0xcf}, // starts with tpub
+	// // BIP32 hierarchical deterministic extended key magics
+	// HDPrivateKeyID: [4]byte{0x04, 0x35, 0x83, 0x94}, // starts with tprv
+	// HDPublicKeyID:  [4]byte{0x04, 0x35, 0x87, 0xcf}, // starts with tpub
 
-	// BIP44 coin type used in the hierarchical deterministic path for
-	// address generation.
-	HDCoinType: 1,
+	// // BIP44 coin type used in the hierarchical deterministic path for
+	// // address generation.
+	// HDCoinType: 1,
 }

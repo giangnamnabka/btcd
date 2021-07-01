@@ -9,13 +9,13 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/btcsuite/btcutil"
 	"github.com/giangnamnabka/btcd/blockchain"
 	"github.com/giangnamnabka/btcd/chaincfg"
 	"github.com/giangnamnabka/btcd/chaincfg/chainhash"
 	"github.com/giangnamnabka/btcd/database"
 	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 )
 
 const (
@@ -556,23 +556,23 @@ func addrToKey(addr btcutil.Address) ([addrKeySize]byte, error) {
 		copy(result[1:], addr.AddressPubKeyHash().Hash160()[:])
 		return result, nil
 
-	case *btcutil.AddressWitnessScriptHash:
-		var result [addrKeySize]byte
-		result[0] = addrKeyTypeWitnessScriptHash
+		// case *btcutil.AddressWitnessScriptHash:
+		// 	var result [addrKeySize]byte
+		// 	result[0] = addrKeyTypeWitnessScriptHash
 
-		// P2WSH outputs utilize a 32-byte data push created by hashing
-		// the script with sha256 instead of hash160. In order to keep
-		// all address entries within the database uniform and compact,
-		// we use a hash160 here to reduce the size of the salient data
-		// push to 20-bytes.
-		copy(result[1:], btcutil.Hash160(addr.ScriptAddress()))
-		return result, nil
+		// 	// P2WSH outputs utilize a 32-byte data push created by hashing
+		// 	// the script with sha256 instead of hash160. In order to keep
+		// 	// all address entries within the database uniform and compact,
+		// 	// we use a hash160 here to reduce the size of the salient data
+		// 	// push to 20-bytes.
+		// 	copy(result[1:], btcutil.Hash160(addr.ScriptAddress()))
+		// 	return result, nil
 
-	case *btcutil.AddressWitnessPubKeyHash:
-		var result [addrKeySize]byte
-		result[0] = addrKeyTypeWitnessPubKeyHash
-		copy(result[1:], addr.Hash160()[:])
-		return result, nil
+		// case *btcutil.AddressWitnessPubKeyHash:
+		// 	var result [addrKeySize]byte
+		// 	result[0] = addrKeyTypeWitnessPubKeyHash
+		// 	copy(result[1:], addr.Hash160()[:])
+		// 	return result, nil
 	}
 
 	return [addrKeySize]byte{}, errUnsupportedAddressType

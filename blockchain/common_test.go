@@ -14,13 +14,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/btcsuite/btcutil"
 	"github.com/giangnamnabka/btcd/chaincfg"
 	"github.com/giangnamnabka/btcd/chaincfg/chainhash"
 	"github.com/giangnamnabka/btcd/database"
 	_ "github.com/giangnamnabka/btcd/database/ffldb"
 	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 )
 
 const (

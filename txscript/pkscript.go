@@ -5,10 +5,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/btcsuite/btcutil"
 	"github.com/giangnamnabka/btcd/btcec"
 	"github.com/giangnamnabka/btcd/chaincfg"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 	"golang.org/x/crypto/ripemd160"
 )
 
@@ -160,12 +160,12 @@ func (s PkScript) String() string {
 // input's signature script or witness.
 //
 // NOTE: Only P2PKH, P2SH, P2WSH, and P2WPKH redeem scripts are supported.
-func ComputePkScript(sigScript []byte, witness wire.TxWitness) (PkScript, error) {
+func ComputePkScript(sigScript []byte) (PkScript, error) {
 	switch {
 	case len(sigScript) > 0:
 		return computeNonWitnessPkScript(sigScript)
-	case len(witness) > 0:
-		return computeWitnessPkScript(witness)
+	// case len(witness) > 0:
+	// 	return computeWitnessPkScript(witness)
 	default:
 		return PkScript{}, ErrUnsupportedScriptType
 	}

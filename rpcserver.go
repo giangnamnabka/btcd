@@ -27,7 +27,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/btcsuite/btcutil"
 	"github.com/btcsuite/websocket"
 	"github.com/giangnamnabka/btcd/blockchain"
 	"github.com/giangnamnabka/btcd/blockchain/indexers"
@@ -42,6 +41,7 @@ import (
 	"github.com/giangnamnabka/btcd/peer"
 	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 )
 
 // API version constants
@@ -665,7 +665,7 @@ func createVinList(mtx *wire.MsgTx) []btcjson.Vin {
 		txIn := mtx.TxIn[0]
 		vinList[0].Coinbase = hex.EncodeToString(txIn.SignatureScript)
 		vinList[0].Sequence = txIn.Sequence
-		vinList[0].Witness = witnessToHex(txIn.Witness)
+		// vinList[0].Witness = witnessToHex(txIn.Witness)
 		return vinList
 	}
 
@@ -684,9 +684,9 @@ func createVinList(mtx *wire.MsgTx) []btcjson.Vin {
 			Hex: hex.EncodeToString(txIn.SignatureScript),
 		}
 
-		if mtx.HasWitness() {
-			vinEntry.Witness = witnessToHex(txIn.Witness)
-		}
+		// if mtx.HasWitness() {
+		// 	vinEntry.Witness = witnessToHex(txIn.Witness)
+		// }
 	}
 
 	return vinList
@@ -756,9 +756,9 @@ func createTxRawResult(chainParams *chaincfg.Params, mtx *wire.MsgTx,
 	}
 
 	txReply := &btcjson.TxRawResult{
-		Hex:      mtxHex,
-		Txid:     txHash,
-		Hash:     mtx.WitnessHash().String(),
+		Hex:  mtxHex,
+		Txid: txHash,
+		// Hash:     mtx.WitnessHash().String(),
 		Size:     int32(mtx.SerializeSize()),
 		Vsize:    int32(mempool.GetTxVirtualSize(btcutil.NewTx(mtx))),
 		Weight:   int32(blockchain.GetTransactionWeight(btcutil.NewTx(mtx))),
@@ -894,17 +894,17 @@ func handleGenerate(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
 		}
 	}
 
-	// Respond with an error if there's virtually 0 chance of mining a block
-	// with the CPU.
-	if !s.cfg.ChainParams.GenerateSupported {
-		return nil, &btcjson.RPCError{
-			Code: btcjson.ErrRPCDifficulty,
-			Message: fmt.Sprintf("No support for `generate` on "+
-				"the current network, %s, as it's unlikely to "+
-				"be possible to mine a block with the CPU.",
-				s.cfg.ChainParams.Net),
-		}
-	}
+	// // Respond with an error if there's virtually 0 chance of mining a block
+	// // with the CPU.
+	// if !s.cfg.ChainParams.GenerateSupported {
+	// 	return nil, &btcjson.RPCError{
+	// 		Code: btcjson.ErrRPCDifficulty,
+	// 		Message: fmt.Sprintf("No support for `generate` on "+
+	// 			"the current network, %s, as it's unlikely to "+
+	// 			"be possible to mine a block with the CPU.",
+	// 			s.cfg.ChainParams.Net),
+	// 	}
+	// }
 
 	c := cmd.(*btcjson.GenerateCmd)
 
@@ -1086,11 +1086,16 @@ func handleGetBlock(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
 			Message: "Block not found",
 		}
 	}
-	// If verbosity is 0, return the serialized block as a hex encoded string.
-	if c.Verbosity != nil && *c.Verbosity == 0 {
+	// // If verbosity is 0, return the serialized block as a hex encoded string.
+	// if c.Verbosity != nil && *c.Verbosity == 0 {
+	// 	return hex.EncodeToString(blkBytes), nil
+	// }
+
+	// When the verbose flag isn't set, simply return the serialized block
+	// as a hex-encoded string.
+	if c.Verbose != nil && !*c.Verbose {
 		return hex.EncodeToString(blkBytes), nil
 	}
-
 	// Otherwise, generate the JSON object and return it.
 
 	// Deserialize the block.
@@ -1140,7 +1145,7 @@ func handleGetBlock(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
 		NextHash:      nextHashString,
 	}
 
-	if *c.Verbosity == 1 {
+	if c.VerboseTx == nil || !*c.VerboseTx {
 		transactions := blk.Transactions()
 		txNames := make([]string, len(transactions))
 		for i, tx := range transactions {
@@ -1206,10 +1211,10 @@ func handleGetBlockChainInfo(s *rpcServer, cmd interface{}, closeChan <-chan str
 		},
 	}
 
-	// Next, populate the response with information describing the current
-	// status of soft-forks deployed via the super-majority block
-	// signalling mechanism.
-	height := chainSnapshot.Height
+	// // Next, populate the response with information describing the current
+	// // status of soft-forks deployed via the super-majority block
+	// // signalling mechanism.
+	// height := chainSnapshot.Height
 	chainInfo.SoftForks.SoftForks = []*btcjson.SoftForkDescription{
 		{
 			ID:      "bip34",
@@ -1217,7 +1222,7 @@ func handleGetBlockChainInfo(s *rpcServer, cmd interface{}, closeChan <-chan str
 			Reject: struct {
 				Status bool `json:"status"`
 			}{
-				Status: height >= params.BIP0034Height,
+				// Status: height >= params.BIP0034Height,
 			},
 		},
 		{
@@ -1226,7 +1231,7 @@ func handleGetBlockChainInfo(s *rpcServer, cmd interface{}, closeChan <-chan str
 			Reject: struct {
 				Status bool `json:"status"`
 			}{
-				Status: height >= params.BIP0066Height,
+				// Status: height >= params.BIP0066Height,
 			},
 		},
 		{
@@ -1235,7 +1240,7 @@ func handleGetBlockChainInfo(s *rpcServer, cmd interface{}, closeChan <-chan str
 			Reject: struct {
 				Status bool `json:"status"`
 			}{
-				Status: height >= params.BIP0065Height,
+				// Status: height >= params.BIP0065Height,
 			},
 		},
 	}
@@ -1729,9 +1734,9 @@ func (state *gbtWorkState) blockTemplateResult(useCoinbaseValue bool, submitOld 
 
 		bTx := btcutil.NewTx(tx)
 		resultTx := btcjson.GetBlockTemplateResultTx{
-			Data:    hex.EncodeToString(txBuf.Bytes()),
-			TxID:    txID.String(),
-			Hash:    tx.WitnessHash().String(),
+			Data: hex.EncodeToString(txBuf.Bytes()),
+			TxID: txID.String(),
+			// Hash:    tx.WitnessHash().String(),
 			Depends: depends,
 			Fee:     template.Fees[i],
 			SigOps:  template.SigOpCosts[i],
@@ -2987,9 +2992,9 @@ func createVinListPrevOut(s *rpcServer, mtx *wire.MsgTx, chainParams *chaincfg.P
 			},
 		}
 
-		if len(txIn.Witness) != 0 {
-			vinEntry.Witness = witnessToHex(txIn.Witness)
-		}
+		// if len(txIn.Witness) != 0 {
+		// 	vinEntry.Witness = witnessToHex(txIn.Witness)
+		// }
 
 		// Add the entry to the list now if it already passed the filter
 		// since the previous output might not be available.
@@ -3582,36 +3587,36 @@ func handleValidateAddress(s *rpcServer, cmd interface{}, closeChan <-chan struc
 		return result, nil
 	}
 
-	switch addr := addr.(type) {
-	case *btcutil.AddressPubKeyHash:
-		result.IsScript = btcjson.Bool(false)
-		result.IsWitness = btcjson.Bool(false)
+	// switch addr := addr.(type) {
+	// case *btcutil.AddressPubKeyHash:
+	// 	result.IsScript = btcjson.Bool(false)
+	// 	result.IsWitness = btcjson.Bool(false)
 
-	case *btcutil.AddressScriptHash:
-		result.IsScript = btcjson.Bool(true)
-		result.IsWitness = btcjson.Bool(false)
+	// case *btcutil.AddressScriptHash:
+	// 	result.IsScript = btcjson.Bool(true)
+	// 	result.IsWitness = btcjson.Bool(false)
 
-	case *btcutil.AddressPubKey:
-		result.IsScript = btcjson.Bool(false)
-		result.IsWitness = btcjson.Bool(false)
+	// case *btcutil.AddressPubKey:
+	// 	result.IsScript = btcjson.Bool(false)
+	// 	result.IsWitness = btcjson.Bool(false)
 
-	case *btcutil.AddressWitnessPubKeyHash:
-		result.IsScript = btcjson.Bool(false)
-		result.IsWitness = btcjson.Bool(true)
-		result.WitnessVersion = btcjson.Int32(int32(addr.WitnessVersion()))
-		result.WitnessProgram = btcjson.String(hex.EncodeToString(addr.WitnessProgram()))
+	// case *btcutil.AddressWitnessPubKeyHash:
+	// 	result.IsScript = btcjson.Bool(false)
+	// 	result.IsWitness = btcjson.Bool(true)
+	// 	result.WitnessVersion = btcjson.Int32(int32(addr.WitnessVersion()))
+	// 	result.WitnessProgram = btcjson.String(hex.EncodeToString(addr.WitnessProgram()))
 
-	case *btcutil.AddressWitnessScriptHash:
-		result.IsScript = btcjson.Bool(true)
-		result.IsWitness = btcjson.Bool(true)
-		result.WitnessVersion = btcjson.Int32(int32(addr.WitnessVersion()))
-		result.WitnessProgram = btcjson.String(hex.EncodeToString(addr.WitnessProgram()))
+	// case *btcutil.AddressWitnessScriptHash:
+	// 	result.IsScript = btcjson.Bool(true)
+	// 	result.IsWitness = btcjson.Bool(true)
+	// 	result.WitnessVersion = btcjson.Int32(int32(addr.WitnessVersion()))
+	// 	result.WitnessProgram = btcjson.String(hex.EncodeToString(addr.WitnessProgram()))
 
-	default:
-		// Handle the case when a new Address is supported by btcutil, but none
-		// of the cases were matched in the switch block. The current behaviour
-		// is to do nothing, and only populate the Address and IsValid fields.
-	}
+	// default:
+	// 	// Handle the case when a new Address is supported by btcutil, but none
+	// 	// of the cases were matched in the switch block. The current behaviour
+	// 	// is to do nothing, and only populate the Address and IsValid fields.
+	// }
 
 	result.Address = addr.EncodeAddress()
 	result.IsValid = true

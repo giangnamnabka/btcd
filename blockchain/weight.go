@@ -5,11 +5,8 @@
 package blockchain
 
 import (
-	"fmt"
-
-	"github.com/btcsuite/btcutil"
-	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 )
 
 const (
@@ -80,38 +77,38 @@ func GetTransactionWeight(tx *btcutil.Tx) int64 {
 // legacy sig op count scaled according to the WitnessScaleFactor, the sig op
 // count for all p2sh inputs scaled by the WitnessScaleFactor, and finally the
 // unscaled sig op count for any inputs spending witness programs.
-func GetSigOpCost(tx *btcutil.Tx, isCoinBaseTx bool, utxoView *UtxoViewpoint, bip16, segWit bool) (int, error) {
-	numSigOps := CountSigOps(tx) * WitnessScaleFactor
+func GetSigOpCost(tx *btcutil.Tx, isCoinBaseTx bool, utxoView *UtxoViewpoint, bip16 bool) (int, error) {
+	numSigOps := CountSigOps(tx)
 	if bip16 {
 		numP2SHSigOps, err := CountP2SHSigOps(tx, isCoinBaseTx, utxoView)
 		if err != nil {
 			return 0, nil
 		}
-		numSigOps += (numP2SHSigOps * WitnessScaleFactor)
+		numSigOps += numP2SHSigOps
 	}
 
-	if segWit && !isCoinBaseTx {
-		msgTx := tx.MsgTx()
-		for txInIndex, txIn := range msgTx.TxIn {
-			// Ensure the referenced output is available and hasn't
-			// already been spent.
-			utxo := utxoView.LookupEntry(txIn.PreviousOutPoint)
-			if utxo == nil || utxo.IsSpent() {
-				str := fmt.Sprintf("output %v referenced from "+
-					"transaction %s:%d either does not "+
-					"exist or has already been spent",
-					txIn.PreviousOutPoint, tx.Hash(),
-					txInIndex)
-				return 0, ruleError(ErrMissingTxOut, str)
-			}
+	// if segWit && !isCoinBaseTx {
+	// 	msgTx := tx.MsgTx()
+	// 	for txInIndex, txIn := range msgTx.TxIn {
+	// 		// Ensure the referenced output is available and hasn't
+	// 		// already been spent.
+	// 		utxo := utxoView.LookupEntry(txIn.PreviousOutPoint)
+	// 		if utxo == nil || utxo.IsSpent() {
+	// 			str := fmt.Sprintf("output %v referenced from "+
+	// 				"transaction %s:%d either does not "+
+	// 				"exist or has already been spent",
+	// 				txIn.PreviousOutPoint, tx.Hash(),
+	// 				txInIndex)
+	// 			return 0, ruleError(ErrMissingTxOut, str)
+	// 		}
 
-			witness := txIn.Witness
-			sigScript := txIn.SignatureScript
-			pkScript := utxo.PkScript()
-			numSigOps += txscript.GetWitnessSigOpCount(sigScript, pkScript, witness)
-		}
+	// 		witness := txIn.Witness
+	// 		sigScript := txIn.SignatureScript
+	// 		pkScript := utxo.PkScript()
+	// 		numSigOps += txscript.GetWitnessSigOpCount(sigScript, pkScript, witness)
+	// 	}
 
-	}
+	// }
 
 	return numSigOps, nil
 }

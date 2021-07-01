@@ -12,7 +12,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/btcsuite/btcutil"
 	"github.com/giangnamnabka/btcd/blockchain"
 	"github.com/giangnamnabka/btcd/blockchain/indexers"
 	"github.com/giangnamnabka/btcd/btcjson"
@@ -21,6 +20,7 @@ import (
 	"github.com/giangnamnabka/btcd/mining"
 	"github.com/giangnamnabka/btcd/txscript"
 	"github.com/giangnamnabka/btcd/wire"
+	"github.com/giangnamnabka/btcutil"
 )
 
 const (
@@ -927,27 +927,27 @@ func (mp *TxPool) validateReplacement(tx *btcutil.Tx,
 func (mp *TxPool) maybeAcceptTransaction(tx *btcutil.Tx, isNew, rateLimit, rejectDupOrphans bool) ([]*chainhash.Hash, *TxDesc, error) {
 	txHash := tx.Hash()
 
-	// If a transaction has witness data, and segwit isn't active yet, If
-	// segwit isn't active yet, then we won't accept it into the mempool as
-	// it can't be mined yet.
-	if tx.MsgTx().HasWitness() {
-		segwitActive, err := mp.cfg.IsDeploymentActive(chaincfg.DeploymentSegwit)
-		if err != nil {
-			return nil, nil, err
-		}
+	// // If a transaction has witness data, and segwit isn't active yet, If
+	// // segwit isn't active yet, then we won't accept it into the mempool as
+	// // it can't be mined yet.
+	// if tx.MsgTx().HasWitness() {
+	// 	segwitActive, err := mp.cfg.IsDeploymentActive(chaincfg.DeploymentSegwit)
+	// 	if err != nil {
+	// 		return nil, nil, err
+	// 	}
 
-		if !segwitActive {
-			simnetHint := ""
-			if mp.cfg.ChainParams.Net == wire.SimNet {
-				bestHeight := mp.cfg.BestHeight()
-				simnetHint = fmt.Sprintf(" (The threshold for segwit activation is 300 blocks on simnet, "+
-					"current best height is %d)", bestHeight)
-			}
-			str := fmt.Sprintf("transaction %v has witness data, "+
-				"but segwit isn't active yet%s", txHash, simnetHint)
-			return nil, nil, txRuleError(wire.RejectNonstandard, str)
-		}
-	}
+	// 	if !segwitActive {
+	// 		simnetHint := ""
+	// 		if mp.cfg.ChainParams.Net == wire.SimNet {
+	// 			bestHeight := mp.cfg.BestHeight()
+	// 			simnetHint = fmt.Sprintf(" (The threshold for segwit activation is 300 blocks on simnet, "+
+	// 				"current best height is %d)", bestHeight)
+	// 		}
+	// 		str := fmt.Sprintf("transaction %v has witness data, "+
+	// 			"but segwit isn't active yet%s", txHash, simnetHint)
+	// 		return nil, nil, txRuleError(wire.RejectNonstandard, str)
+	// 	}
+	// }
 
 	// Don't accept the transaction if it already exists in the pool.  This
 	// applies to orphan transactions as well when the reject duplicate
@@ -1121,7 +1121,7 @@ func (mp *TxPool) maybeAcceptTransaction(tx *btcutil.Tx, isNew, rateLimit, rejec
 	// maximum allowed signature operations per transaction is less than
 	// the maximum allowed signature operations per block.
 	// TODO(roasbeef): last bool should be conditional on segwit activation
-	sigOpCost, err := blockchain.GetSigOpCost(tx, false, utxoView, true, true)
+	sigOpCost, err := blockchain.GetSigOpCost(tx, false, utxoView, true)
 	if err != nil {
 		if cerr, ok := err.(blockchain.RuleError); ok {
 			return nil, nil, chainRuleError(cerr)
