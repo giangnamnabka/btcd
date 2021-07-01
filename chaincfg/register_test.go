@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	. "github.com/giangnamnabka/btcd/chaincfg"
+	. "github.com/btcsuite/btcd/chaincfg"
 )
 
 // Define some of the required parameters for a user-registered
@@ -65,7 +65,7 @@ func TestRegister(t *testing.T) {
 				},
 				{
 					name:   "duplicate testnet3",
-					params: &TestNet4Params,
+					params: &TestNet3Params,
 					err:    ErrDuplicateNet,
 				},
 				{
@@ -80,7 +80,7 @@ func TestRegister(t *testing.T) {
 					valid: true,
 				},
 				{
-					magic: TestNet4Params.PubKeyHashAddrID,
+					magic: TestNet3Params.PubKeyHashAddrID,
 					valid: true,
 				},
 				{
@@ -106,7 +106,7 @@ func TestRegister(t *testing.T) {
 					valid: true,
 				},
 				{
-					magic: TestNet4Params.ScriptHashAddrID,
+					magic: TestNet3Params.ScriptHashAddrID,
 					valid: true,
 				},
 				{
@@ -132,7 +132,7 @@ func TestRegister(t *testing.T) {
 					valid:  true,
 				},
 				{
-					prefix: TestNet4Params.Bech32HRPSegwit + "1",
+					prefix: TestNet3Params.Bech32HRPSegwit + "1",
 					valid:  true,
 				},
 				{
@@ -171,8 +171,8 @@ func TestRegister(t *testing.T) {
 					err:  nil,
 				},
 				{
-					priv: TestNet4Params.HDPrivateKeyID[:],
-					want: TestNet4Params.HDPublicKeyID[:],
+					priv: TestNet3Params.HDPrivateKeyID[:],
+					want: TestNet3Params.HDPublicKeyID[:],
 					err:  nil,
 				},
 				{
@@ -214,7 +214,7 @@ func TestRegister(t *testing.T) {
 					valid: true,
 				},
 				{
-					magic: TestNet4Params.PubKeyHashAddrID,
+					magic: TestNet3Params.PubKeyHashAddrID,
 					valid: true,
 				},
 				{
@@ -240,7 +240,7 @@ func TestRegister(t *testing.T) {
 					valid: true,
 				},
 				{
-					magic: TestNet4Params.ScriptHashAddrID,
+					magic: TestNet3Params.ScriptHashAddrID,
 					valid: true,
 				},
 				{
@@ -266,7 +266,7 @@ func TestRegister(t *testing.T) {
 					valid:  true,
 				},
 				{
-					prefix: TestNet4Params.Bech32HRPSegwit + "1",
+					prefix: TestNet3Params.Bech32HRPSegwit + "1",
 					valid:  true,
 				},
 				{
@@ -321,7 +321,7 @@ func TestRegister(t *testing.T) {
 				},
 				{
 					name:   "duplicate testnet3",
-					params: &TestNet4Params,
+					params: &TestNet3Params,
 					err:    ErrDuplicateNet,
 				},
 				{
@@ -341,7 +341,7 @@ func TestRegister(t *testing.T) {
 					valid: true,
 				},
 				{
-					magic: TestNet4Params.PubKeyHashAddrID,
+					magic: TestNet3Params.PubKeyHashAddrID,
 					valid: true,
 				},
 				{
@@ -367,7 +367,7 @@ func TestRegister(t *testing.T) {
 					valid: true,
 				},
 				{
-					magic: TestNet4Params.ScriptHashAddrID,
+					magic: TestNet3Params.ScriptHashAddrID,
 					valid: true,
 				},
 				{
@@ -393,7 +393,7 @@ func TestRegister(t *testing.T) {
 					valid:  true,
 				},
 				{
-					prefix: TestNet4Params.Bech32HRPSegwit + "1",
+					prefix: TestNet3Params.Bech32HRPSegwit + "1",
 					valid:  true,
 				},
 				{
@@ -432,8 +432,8 @@ func TestRegister(t *testing.T) {
 					err:  nil,
 				},
 				{
-					priv: TestNet4Params.HDPrivateKeyID[:],
-					want: TestNet4Params.HDPublicKeyID[:],
+					priv: TestNet3Params.HDPrivateKeyID[:],
+					want: TestNet3Params.HDPublicKeyID[:],
 					err:  nil,
 				},
 				{

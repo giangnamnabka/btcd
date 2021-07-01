@@ -18,13 +18,13 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/btcsuite/btcd/blockchain"
+	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/btcsuite/btcd/wire"
 	"github.com/btcsuite/go-socks/socks"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/decred/dcrd/lru"
-	"github.com/giangnamnabka/btcd/blockchain"
-	"github.com/giangnamnabka/btcd/chaincfg"
-	"github.com/giangnamnabka/btcd/chaincfg/chainhash"
-	"github.com/giangnamnabka/btcd/wire"
 )
 
 const (
@@ -2218,7 +2218,7 @@ func newPeerBase(origCfg *Config, inbound bool) *Peer {
 
 	// Set the chain parameters to testnet if the caller did not specify any.
 	if cfg.ChainParams == nil {
-		cfg.ChainParams = &chaincfg.TestNet4Params
+		cfg.ChainParams = &chaincfg.TestNet3Params
 	}
 
 	// Set the trickle interval if a non-positive value is specified.

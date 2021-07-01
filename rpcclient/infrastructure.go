@@ -25,10 +25,10 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/btcsuite/btcd/btcjson"
+	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/go-socks/socks"
 	"github.com/btcsuite/websocket"
-	"github.com/giangnamnabka/btcd/btcjson"
-	"github.com/giangnamnabka/btcd/chaincfg"
 )
 
 var (
@@ -1441,8 +1441,8 @@ func New(config *ConnConfig, ntfnHandlers *NotificationHandlers) (*Client, error
 		fallthrough
 	case chaincfg.MainNetParams.Name:
 		client.chainParams = &chaincfg.MainNetParams
-	case chaincfg.TestNet4Params.Name:
-		client.chainParams = &chaincfg.TestNet4Params
+	case chaincfg.TestNet3Params.Name:
+		client.chainParams = &chaincfg.TestNet3Params
 	case chaincfg.RegressionNetParams.Name:
 		client.chainParams = &chaincfg.RegressionNetParams
 	case chaincfg.SimNetParams.Name:

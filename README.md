@@ -1,10 +1,10 @@
 btcd
 ====
 
-[![Build Status](https://github.com/giangnamnabka/btcd/workflows/Build%20and%20Test/badge.svg)](https://github.com/giangnamnabka/btcd/actions)
-[![Coverage Status](https://coveralls.io/repos/github/giangnamnabka/btcd/badge.svg?branch=master)](https://coveralls.io/github/giangnamnabka/btcd?branch=master)
+[![Build Status](https://github.com/btcsuite/btcd/workflows/Build%20and%20Test/badge.svg)](https://github.com/btcsuite/btcd/actions)
+[![Coverage Status](https://coveralls.io/repos/github/btcsuite/btcd/badge.svg?branch=master)](https://coveralls.io/github/btcsuite/btcd?branch=master)
 [![ISC License](https://img.shields.io/badge/license-ISC-blue.svg)](http://copyfree.org)
-[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/giangnamnabka/btcd)
+[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/btcsuite/btcd)
 
 btcd is an alternative full node bitcoin implementation written in Go (golang).
 
@@ -40,9 +40,7 @@ which are both under active development.
 
 ## Installation
 
-#### Windows - MSI Available
-
-https://github.com/giangnamnabka/btcd/releases
+https://github.com/btcsuite/btcd/releases
 
 #### Linux/BSD/MacOSX/POSIX - Build from Source
 
@@ -64,7 +62,7 @@ recommended that `GOPATH` is set to a directory in your home directory such as
 - Run the following commands to obtain btcd, all dependencies, and install it:
 
 ```bash
-$ cd $GOPATH/src/github.com/giangnamnabka/btcd
+$ cd $GOPATH/src/github.com/btcsuite/btcd
 $ GO111MODULE=on go install -v . ./cmd/...
 ```
 
@@ -74,16 +72,12 @@ $ GO111MODULE=on go install -v . ./cmd/...
 
 ## Updating
 
-#### Windows
-
-Install a newer MSI
-
 #### Linux/BSD/MacOSX/POSIX - Build from Source
 
 - Run the following commands to update btcd, all dependencies, and install it:
 
 ```bash
-$ cd $GOPATH/src/github.com/giangnamnabka/btcd
+$ cd $GOPATH/src/github.com/btcsuite/btcd
 $ git pull
 $ GO111MODULE=on go install -v . ./cmd/...
 ```
@@ -93,10 +87,6 @@ $ GO111MODULE=on go install -v . ./cmd/...
 btcd has several configuration options available to tweak how it runs, but all
 of the basic operations described in the intro section work with zero
 configuration.
-
-#### Windows (Installed from MSI)
-
-Launch btcd from your Start menu.
 
 #### Linux/BSD/POSIX/Source
 
@@ -112,17 +102,17 @@ $ ./btcd
 
 ## Issue Tracker
 
-The [integrated github issue tracker](https://github.com/giangnamnabka/btcd/issues)
+The [integrated github issue tracker](https://github.com/btcsuite/btcd/issues)
 is used for this project.
 
 ## Documentation
 
-The documentation is a work-in-progress.  It is located in the [docs](https://github.com/giangnamnabka/btcd/tree/master/docs) folder.
+The documentation is a work-in-progress.  It is located in the [docs](https://github.com/btcsuite/btcd/tree/master/docs) folder.
 
 ## Release Verification
 
 Please see our [documentation on the current build/verification
-process](https://github.com/giangnamnabka/btcd/tree/master/release) for all our
+process](https://github.com/btcsuite/btcd/tree/master/release) for all our
 releases for information on how to verify the integrity of published releases
 using our reproducible build system.
 

@@ -8,6 +8,7 @@ import (
 	"bufio"
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"io"
@@ -20,16 +21,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/btcsuite/btcd/blockchain"
+	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/btcsuite/btcd/connmgr"
+	"github.com/btcsuite/btcd/database"
+	_ "github.com/btcsuite/btcd/database/ffldb"
+	"github.com/btcsuite/btcd/mempool"
+	"github.com/btcsuite/btcd/peer"
+	"github.com/btcsuite/btcutil"
 	"github.com/btcsuite/go-socks/socks"
-	"github.com/giangnamnabka/btcd/blockchain"
-	"github.com/giangnamnabka/btcd/chaincfg"
-	"github.com/giangnamnabka/btcd/chaincfg/chainhash"
-	"github.com/giangnamnabka/btcd/connmgr"
-	"github.com/giangnamnabka/btcd/database"
-	_ "github.com/giangnamnabka/btcd/database/ffldb"
-	"github.com/giangnamnabka/btcd/mempool"
-	"github.com/giangnamnabka/btcd/peer"
-	"github.com/giangnamnabka/btcutil"
 	flags "github.com/jessevdk/go-flags"
 )
 
@@ -159,6 +160,9 @@ type config struct {
 	RPCUser              string        `short:"u" long:"rpcuser" description:"Username for RPC connections"`
 	SigCacheMaxSize      uint          `long:"sigcachemaxsize" description:"The maximum number of entries in the signature verification cache"`
 	SimNet               bool          `long:"simnet" description:"Use the simulation test network"`
+	SigNet               bool          `long:"signet" description:"Use the signet test network"`
+	SigNetChallenge      string        `long:"signetchallenge" description:"Connect to a custom signet network defined by this challenge instead of using the global default signet test network -- Can be specified multiple times"`
+	SigNetSeedNode       []string      `long:"signetseednode" description:"Specify a seed node for the signet network instead of using the global default signet network seed nodes"`
 	TestNet3             bool          `long:"testnet" description:"Use the test network"`
 	TorIsolation         bool          `long:"torisolation" description:"Enable Tor stream isolation by randomizing user credentials for each connection."`
 	TrickleInterval      time.Duration `long:"trickleinterval" description:"Minimum time between attempts to send new inventory to a connected peer"`
@@ -475,8 +479,8 @@ func loadConfig() (*config, []string, error) {
 	// Load additional config from file.
 	var configFileError error
 	parser := newConfigParser(&cfg, &serviceOpts, flags.Default)
-	if !(preCfg.RegressionTest || preCfg.SimNet) || preCfg.ConfigFile !=
-		defaultConfigFile {
+	if !(preCfg.RegressionTest || preCfg.SimNet || preCfg.SigNet) ||
+		preCfg.ConfigFile != defaultConfigFile {
 
 		if _, err := os.Stat(preCfg.ConfigFile); os.IsNotExist(err) {
 			err := createDefaultConfigFile(preCfg.ConfigFile)
@@ -538,7 +542,7 @@ func loadConfig() (*config, []string, error) {
 	// while we're at it
 	if cfg.TestNet3 {
 		numNets++
-		activeNetParams = &TestNet4Params
+		activeNetParams = &testNet3Params
 	}
 	if cfg.RegressionTest {
 		numNets++
@@ -550,9 +554,49 @@ func loadConfig() (*config, []string, error) {
 		activeNetParams = &simNetParams
 		cfg.DisableDNSSeed = true
 	}
+	if cfg.SigNet {
+		numNets++
+		activeNetParams = &sigNetParams
+
+		// Let the user overwrite the default signet parameters. The
+		// challenge defines the actual signet network to join and the
+		// seed nodes are needed for network discovery.
+		sigNetChallenge := chaincfg.DefaultSignetChallenge
+		sigNetSeeds := chaincfg.DefaultSignetDNSSeeds
+		if cfg.SigNetChallenge != "" {
+			challenge, err := hex.DecodeString(cfg.SigNetChallenge)
+			if err != nil {
+				str := "%s: Invalid signet challenge, hex " +
+					"decode failed: %v"
+				err := fmt.Errorf(str, funcName, err)
+				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintln(os.Stderr, usageMessage)
+				return nil, nil, err
+			}
+			sigNetChallenge = challenge
+		}
+
+		if len(cfg.SigNetSeedNode) > 0 {
+			sigNetSeeds = make(
+				[]chaincfg.DNSSeed, len(cfg.SigNetSeedNode),
+			)
+			for idx, seed := range cfg.SigNetSeedNode {
+				sigNetSeeds[idx] = chaincfg.DNSSeed{
+					Host:         seed,
+					HasFiltering: false,
+				}
+			}
+		}
+
+		chainParams := chaincfg.CustomSignetParams(
+			sigNetChallenge, sigNetSeeds,
+		)
+		activeNetParams.Params = &chainParams
+	}
 	if numNets > 1 {
-		str := "%s: The testnet, regtest, segnet, and simnet params " +
-			"can't be used together -- choose one of the four"
+		str := "%s: The testnet, regtest, segnet, signet and simnet " +
+			"params can't be used together -- choose one of the " +
+			"five"
 		err := fmt.Errorf(str, funcName)
 		fmt.Fprintln(os.Stderr, err)
 		fmt.Fprintln(os.Stderr, usageMessage)

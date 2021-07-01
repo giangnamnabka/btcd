@@ -5,8 +5,8 @@
 package main
 
 import (
-	"github.com/giangnamnabka/btcd/chaincfg"
-	"github.com/giangnamnabka/btcd/wire"
+	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcd/wire"
 )
 
 // activeNetParams is a pointer to the parameters specific to the
@@ -40,11 +40,11 @@ var regressionNetParams = params{
 	rpcPort: "18334",
 }
 
-// TestNet4Params contains parameters specific to the test network (version 3)
+// testNet3Params contains parameters specific to the test network (version 3)
 // (wire.TestNet3).  NOTE: The RPC port is intentionally different than the
 // reference implementation - see the mainNetParams comment for details.
-var TestNet4Params = params{
-	Params:  &chaincfg.TestNet4Params,
+var testNet3Params = params{
+	Params:  &chaincfg.TestNet3Params,
 	rpcPort: "18334",
 }
 
@@ -53,6 +53,13 @@ var TestNet4Params = params{
 var simNetParams = params{
 	Params:  &chaincfg.SimNetParams,
 	rpcPort: "18556",
+}
+
+// sigNetParams contains parameters specific to the Signet network
+// (wire.SigNet).
+var sigNetParams = params{
+	Params:  &chaincfg.SigNetParams,
+	rpcPort: "38332",
 }
 
 // netName returns the name used when referring to a bitcoin network.  At the

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/giangnamnabka/btcd/wire"
+	"github.com/btcsuite/btcd/wire"
 )
 
 // TestParsePkScript ensures that the supported script types can be parsed
@@ -418,7 +418,7 @@ func TestComputePkScript(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			valid := test.pkScript != nil
 			pkScript, err := ComputePkScript(
-				test.sigScript,
+				test.sigScript, test.witness,
 			)
 			if err != nil && valid {
 				t.Fatalf("unable to compute pkScript: %v", err)

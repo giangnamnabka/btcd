@@ -13,9 +13,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/giangnamnabka/btcd/btcjson"
-	"github.com/giangnamnabka/btcd/chaincfg"
-	"github.com/giangnamnabka/btcutil"
+	"github.com/btcsuite/btcd/btcjson"
+	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcutil"
 	flags "github.com/jessevdk/go-flags"
 )
 
@@ -107,6 +107,7 @@ type config struct {
 	SimNet         bool   `long:"simnet" description:"Connect to the simulation test network"`
 	TLSSkipVerify  bool   `long:"skipverify" description:"Do not verify tls certificates (not recommended!)"`
 	TestNet3       bool   `long:"testnet" description:"Connect to testnet"`
+	SigNet         bool   `long:"signet" description:"Connect to signet"`
 	ShowVersion    bool   `short:"V" long:"version" description:"Display version information and exit"`
 	Wallet         bool   `long:"wallet" description:"Connect to wallet"`
 }
@@ -118,7 +119,7 @@ func normalizeAddress(addr string, chain *chaincfg.Params, useWallet bool) (stri
 	if err != nil {
 		var defaultPort string
 		switch chain {
-		case &chaincfg.TestNet4Params:
+		case &chaincfg.TestNet3Params:
 			if useWallet {
 				defaultPort = "18332"
 			} else {
@@ -137,6 +138,12 @@ func normalizeAddress(addr string, chain *chaincfg.Params, useWallet bool) (stri
 				return "", paramErr
 			} else {
 				defaultPort = "18334"
+			}
+		case &chaincfg.SigNetParams:
+			if useWallet {
+				defaultPort = "38332"
+			} else {
+				defaultPort = "38332"
 			}
 		default:
 			if useWallet {
@@ -263,7 +270,7 @@ func loadConfig() (*config, []string, error) {
 	numNets := 0
 	if cfg.TestNet3 {
 		numNets++
-		network = &chaincfg.TestNet4Params
+		network = &chaincfg.TestNet3Params
 	}
 	if cfg.SimNet {
 		numNets++
@@ -272,6 +279,10 @@ func loadConfig() (*config, []string, error) {
 	if cfg.RegressionTest {
 		numNets++
 		network = &chaincfg.RegressionNetParams
+	}
+	if cfg.SigNet {
+		numNets++
+		network = &chaincfg.SigNetParams
 	}
 
 	if numNets > 1 {

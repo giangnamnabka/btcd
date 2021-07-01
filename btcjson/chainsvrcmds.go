@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/giangnamnabka/btcd/wire"
+	"github.com/btcsuite/btcd/wire"
 )
 
 // AddNodeSubCmd defines the type used in the addnode JSON-RPC command for the
@@ -196,8 +196,7 @@ func NewGetBestBlockHashCmd() *GetBestBlockHashCmd {
 // GetBlockCmd defines the getblock JSON-RPC command.
 type GetBlockCmd struct {
 	Hash      string
-	Verbose   *bool `jsonrpcdefault:"true"`
-	VerboseTx *bool `jsonrpcdefault:"false"`
+	Verbosity *int `jsonrpcdefault:"1"`
 }
 
 // NewGetBlockCmd returns a new instance which can be used to issue a getblock
@@ -205,11 +204,10 @@ type GetBlockCmd struct {
 //
 // The parameters which are pointers indicate they are optional.  Passing nil
 // for optional parameters will use the default value.
-func NewGetBlockCmd(hash string, verbose, verboseTx *bool) *GetBlockCmd {
+func NewGetBlockCmd(hash string, verbosity *int) *GetBlockCmd {
 	return &GetBlockCmd{
 		Hash:      hash,
-		Verbose:   verbose,
-		VerboseTx: verboseTx,
+		Verbosity: verbosity,
 	}
 }
 

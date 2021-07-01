@@ -22,22 +22,22 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/giangnamnabka/btcd/addrmgr"
-	"github.com/giangnamnabka/btcd/blockchain"
-	"github.com/giangnamnabka/btcd/blockchain/indexers"
-	"github.com/giangnamnabka/btcd/chaincfg"
-	"github.com/giangnamnabka/btcd/chaincfg/chainhash"
-	"github.com/giangnamnabka/btcd/connmgr"
-	"github.com/giangnamnabka/btcd/database"
-	"github.com/giangnamnabka/btcd/mempool"
-	"github.com/giangnamnabka/btcd/mining"
-	"github.com/giangnamnabka/btcd/mining/cpuminer"
-	"github.com/giangnamnabka/btcd/netsync"
-	"github.com/giangnamnabka/btcd/peer"
-	"github.com/giangnamnabka/btcd/txscript"
-	"github.com/giangnamnabka/btcd/wire"
-	"github.com/giangnamnabka/btcutil"
-	"github.com/giangnamnabka/btcutil/bloom"
+	"github.com/btcsuite/btcd/addrmgr"
+	"github.com/btcsuite/btcd/blockchain"
+	"github.com/btcsuite/btcd/blockchain/indexers"
+	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/btcsuite/btcd/connmgr"
+	"github.com/btcsuite/btcd/database"
+	"github.com/btcsuite/btcd/mempool"
+	"github.com/btcsuite/btcd/mining"
+	"github.com/btcsuite/btcd/mining/cpuminer"
+	"github.com/btcsuite/btcd/netsync"
+	"github.com/btcsuite/btcd/peer"
+	"github.com/btcsuite/btcd/txscript"
+	"github.com/btcsuite/btcd/wire"
+	"github.com/btcsuite/btcutil"
+	"github.com/btcsuite/btcutil/bloom"
 )
 
 const (
@@ -2715,19 +2715,19 @@ func newServer(listenAddrs, agentBlacklist, agentWhitelist []string,
 		indexManager = indexers.NewManager(db, indexes)
 	}
 
-	// // Merge given checkpoints with the default ones unless they are disabled.
-	// var checkpoints []chaincfg.Checkpoint
-	// if !cfg.DisableCheckpoints {
-	// 	checkpoints = mergeCheckpoints(s.chainParams.Checkpoints, cfg.addCheckpoints)
-	// }
+	// Merge given checkpoints with the default ones unless they are disabled.
+	var checkpoints []chaincfg.Checkpoint
+	if !cfg.DisableCheckpoints {
+		checkpoints = mergeCheckpoints(s.chainParams.Checkpoints, cfg.addCheckpoints)
+	}
 
 	// Create a new block chain instance with the appropriate configuration.
 	var err error
 	s.chain, err = blockchain.New(&blockchain.Config{
-		DB:          s.db,
-		Interrupt:   interrupt,
-		ChainParams: s.chainParams,
-		// Checkpoints:  checkpoints,
+		DB:           s.db,
+		Interrupt:    interrupt,
+		ChainParams:  s.chainParams,
+		Checkpoints:  checkpoints,
 		TimeSource:   s.timeSource,
 		SigCache:     s.sigCache,
 		IndexManager: indexManager,

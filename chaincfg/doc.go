@@ -25,8 +25,8 @@
 //          "fmt"
 //          "log"
 //
-//          "github.com/giangnamnabka/btcutil"
-//          "github.com/giangnamnabka/btcd/chaincfg"
+//          "github.com/btcsuite/btcutil"
+//          "github.com/btcsuite/btcd/chaincfg"
 //  )
 //
 //  var testnet = flag.Bool("testnet", false, "operate on the testnet Bitcoin network")
@@ -39,7 +39,7 @@
 //
 //          // Modify active network parameters if operating on testnet.
 //          if *testnet {
-//                  chainParams = &chaincfg.TestNet4Params
+//                  chainParams = &chaincfg.TestNet3Params
 //          }
 //
 //          // later...
