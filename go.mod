@@ -8,7 +8,7 @@ require (
 	github.com/btcsuite/winsvc v1.0.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/decred/dcrd/lru v1.0.0
-	github.com/giangnamnabka/btcutil v1.0.3-0.20210701072126-050f52e9dbe1
+	github.com/giangnamnabka/btcutil v1.0.3-0.20210701074019-f7b1d4905601
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/jrick/logrotate v1.0.0
 	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
